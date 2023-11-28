@@ -3,6 +3,8 @@
 <h2 style="margin: 60px 0px 10px;">Contact</h2>
 
 <p>
-<strong>Email:</strong> <email>wxinyue (at) ohs.stanford.edu</email>
+<strong>Primary Email:</strong> <email>wxinyue (at) ohs.stanford.edu</email>
 <br />
-<strong>Phone:</strong> +86 136 5020 0551</p>
+<strong>Sub Email:</strong> <email>wxinyue (at) wustl.edu</email>
+<br />
+<strong>Sub Email:</strong> <email>xw668 (at) cornell.edu</email>
