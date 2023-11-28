@@ -6,18 +6,3 @@
 <div class="publications">
 <ol class="bibliography">
 
-<div style="display: none;">
-
-              });
-          });
-      })
-  </script>
-    </div>
-  </div>
-</div>
-</li>
-
-</ol>
-</div>
-
-
