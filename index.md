@@ -19,6 +19,4 @@ My research lies at the intersection of **gender studies** and **human psycholog
 
 {% include_relative _includes/publications.md %}
 
-{% include_relative _includes/services.md %}
-
 {% include_relative _includes/contact.md %}
