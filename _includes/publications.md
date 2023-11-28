@@ -63,7 +63,7 @@
       <a href="" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:12px;"></a>
       <a href="" role="button" target="_blank" style="font-size:12px;"></a>
       <a href="" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:12px;"></a>
-      <a href="https://dblp.uni-trier.de/rec/conf/cvpr/SunLCS19.html?view=bibtex" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:12px;">BibTex</a>
+      <a href="" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:12px;"></a>
 <br>
 <strong> <a style="color:#e74d3c; font-weight:600" href="">800+</i><i style="color:#e74d3c; font-weight:600"> Citations • </i></a><a href="" target="_blank" rel="noopener"><i style="color:#e74d3c; font-weight:600" id="githubstars_mtl">600+</i><i style="color:#e74d3c; font-weight:600"> GitHub Stars</i></a> <a style="color:#e74d3c; font-weight:600" href="">• <i></i></a></strong>
 <br>
