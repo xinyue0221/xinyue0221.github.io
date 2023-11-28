@@ -11,7 +11,7 @@ I'm Xinyue Wang, a student at [Stanford University](https://www.stanford.edu/) [
 My research lies at the intersection of **gender studies** and **human psychology** -- with a special focus on utilizing mathematical theories and methods to analyze patterns and data related to gender, human sexuality and BDSM interests. My research interests include **quantitative analysis in gender studies**, **societal impact studies**, **gender roles**, **media perception**, and **number theory**.
 
 <strong style="color:#e74d3c; font-weight:600; display: none;">
-    I am currently on the 2023-2024 academic job market, looking for faculty positions in CS, CSE, ECE, IEOR, etc., related to Artificial Intelligence, Computer Vision, and Machine Learning. Please feel free to contact me if you are interested. I am also happy to give talks on my research in related seminars.
+    BLANK.
 </strong>
 
 
