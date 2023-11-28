@@ -9,5 +9,5 @@
   <li>Founder, <a href="https://www.ohsguide.com"><autocolor>Stanford OHS Guide</autocolor></a></li>
 </ul>
 
-  -->
+
 </ul>
