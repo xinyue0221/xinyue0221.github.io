@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Hours - Xinyue Wang</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            margin-bottom: 1em;
+        }
+        ul {
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Office Hours - Xinyue Wang</h1>
+        <h2>TA for Analytical & Organic Chemistry 2024-25</h2>
+
+        <h3>Contact Information</h3>
+        <p><strong>Email:</strong> <a href="mailto:wxinyue@stanford.edu">wxinyue@stanford.edu</a></p>
+        <p><strong>Office Hours:</strong> Tuesdays and Thursdays 4-5pm Pacific, or by appointment.  Please email me to schedule an appointment.</p>
+        <p><strong>Location:</strong> <a href="https://stanford.zoom.us/j/94679471633?pwd=HvNRP4neFNHn6pTd4XFWriJuek7K2E.1">Zoom Room</a></p>
+
+        <h3>About Me</h3>
+        <p>I’m Xinyue Wang, a student at Stanford University OHS with a deep interest in Gender Studies, Human Sexuality, and Math. Driven by a passion for understanding complex societal dynamics and identities, I integrate mathematical precision in analyzing these nuanced subjects. My aim is to contribute to impactful research that fosters inclusivity and awareness. Beyond academics, I actively engage in community outreach and education, aspiring to inspire and empower through knowledge.</p>
+        <p>My research lies at the intersection of gender studies and human psychology – with a special focus on utilizing mathematical theories and methods to analyze patterns and data related to gender, human sexuality, and sadomasochistic interests. My research interests include quantitative analysis in gender studies, societal impact studies, gender roles, and media perception.</p>
+
+        <h3>About the Course</h3>
+        <p>Analytical & Organic Chemistry is a year-long exploration of topics in collegiate chemistry. The first semester will delve into:</p>
+        <ul>
+            <li>Models of covalent bonding</li>
+            <li>Molecular orbital theory</li>
+            <li>Multi-step reaction mechanisms</li>
+            <li>Rate law determination</li>
+            <li>Equilibrium systems</li>
+            <li>Acid-base models</li>
+            <li>Understanding free energy</li>
+            <li>Building electro-chemical cells</li>
+        </ul>
+        <p>The second semester will apply that foundation to explore:</p>
+        <ul>
+            <li>Structures, properties, and reactions of organic substances</li>
+            <li>Organic nomenclature</li>
+            <li>Conformational analysis</li>
+            <li>Isomerism</li>
+            <li>Functional group conversion</li>
+            <li>Organic reaction mechanisms</li>
+            <li>Synthetic design</li>
+        </ul>
+        <p>Throughout the year, students will:</p>
+        <ul>
+            <li>Accomplish hands-on experiments using a custom-built at-home lab kit</li>
+            <li>Apply computational chemistry techniques for structural determination</li>
+            <li>Model reactions</li>
+            <li>Perform spectroscopic analysis (NMR, IR, and UV-Vis)</li>
+        </ul>
+
+       <h3>Textbook</h3>
+        <p>Provide later.</p>
+    </div>
+</body>
+</html>
