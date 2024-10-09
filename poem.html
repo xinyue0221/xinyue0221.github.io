@@ -15,26 +15,14 @@
 
 	<!-- Custom Styles -->
 	<style>
+		/* General Styles */
 		body {
 			background-color: #ffffff;
 			color: #252525;
 			font-family: 'Crimson Text', serif;
 			font-size: 1rem;
 			line-height: 1.6;
-			padding: 1.5rem;
-		}
-		h1, h2, h3, h4, h5, h6 {
-			font-family: 'Crimson Text', serif;
-			font-weight: 400;
-			line-height: 1.125;
-		}
-		h1 {
-			font-size: 2.5rem;
-			font-style: italic;
-			font-weight: 700;
-		}
-		h2 {
-			font-size: 1.75rem;
+			margin: 0;
 		}
 		a {
 			color: #252525;
@@ -43,16 +31,33 @@
 		a:hover {
 			text-decoration: none;
 		}
+
+		/* Container to center content */
+		.container {
+			max-width: 800px; /* Adjust the max-width as needed */
+			margin: 0 auto;
+			padding: 1.5rem;
+		}
+
+		/* Header Styles */
+		header {
+			padding-top: 3.38rem;
+			padding-bottom: 0;
+		}
+		.site-title {
+			font-size: 2.5rem;
+			font-style: italic;
+			font-weight: 700;
+			margin: 0;
+		}
 		.site-title a {
 			text-decoration: none;
 		}
 		.site-title a:hover {
 			text-decoration: underline;
 		}
-		.header-container {
-			padding-top: 3.38rem;
-			padding-bottom: 0;
-		}
+
+		/* Navigation Styles */
 		.navigation {
 			font-size: 1rem;
 			margin-top: 1rem;
@@ -67,10 +72,24 @@
 		.navigation li {
 			margin: 0;
 		}
+
+		/* Separator Line */
 		hr {
 			border: none;
 			border-top: 1px solid #F0F0F0;
 			margin: 3.38rem 0;
+		}
+
+		/* Main Content Styles */
+		main {
+			margin-top: 2rem;
+		}
+		article {
+			margin-bottom: 3rem;
+		}
+		h2 {
+			font-size: 1.75rem;
+			margin-bottom: 1rem;
 		}
 		.post-content p {
 			margin: 0 0 1.5rem;
@@ -82,6 +101,8 @@
 			font-weight: 400;
 			margin-bottom: 1.5rem;
 		}
+
+		/* Footer Styles */
 		footer {
 			text-align: center;
 			padding: 2.25rem 0;
@@ -89,6 +110,8 @@
 		footer p {
 			margin: 0;
 		}
+
+		/* Spacer */
 		.spacer {
 			height: 5.06rem;
 		}
@@ -96,8 +119,8 @@
 </head>
 
 <body>
-	<header>
-		<div class="header-container">
+	<div class="container">
+		<header>
 			<h1 class="site-title"><a href="poem.html">Poema</a></h1>
 			<nav class="navigation">
 				<ul>
@@ -105,41 +128,40 @@
 				</ul>
 			</nav>
 			<hr />
-		</div>
-	</header>
+		</header>
 
-	<main>
-		<article>
-			<h2>Saturnine</h2>
-			<div class="post-content">
-				<p><em>Thus I mourn amidst the watchers of the skies,<br>
-				Enshrined in melancholy, where no solace lies.</em></p>
-			</div>
-			<div class="post-date">October 2, 2024</div>
-			<hr />
-		</article>
+		<main>
+			<article>
+				<h2>Saturnine</h2>
+				<div class="post-content">
+					<p><em>Thus I mourn amidst the watchers of the skies,<br>
+					Enshrined in melancholy, where no solace lies.</em></p>
+				</div>
+				<div class="post-date">October 2, 2024</div>
+				<hr />
+			</article>
 
-		<article>
-			<h2>Evanescence</h2>
-			<div class="post-content">
-				<p><em>Stars fade, galaxies drift in silent divide,<br>
-				The universe marches, indifferent and wide.<br>
-				In this vast expanse, we might lose our way,<br>
-				But hold this moment, let it not stray.</em></p>
-				<p><em>For here and now, a fleeting glance,<br>
-				A singular dance in the cosmic expanse.<br>
-				Remember this breath, this heartbeat's spark,<br>
-				In the endless night, our fleeting mark.</em></p>
-			</div>
-			<div class="post-date">August 23, 2024</div>
-			<hr />
-		</article>
-	</main>
+			<article>
+				<h2>Evanescence</h2>
+				<div class="post-content">
+					<p><em>Stars fade, galaxies drift in silent divide,<br>
+					The universe marches, indifferent and wide.<br>
+					In this vast expanse, we might lose our way,<br>
+					But hold this moment, let it not stray.</em></p>
+					<p><em>For here and now, a fleeting glance,<br>
+					A singular dance in the cosmic expanse.<br>
+					Remember this breath, this heartbeat's spark,<br>
+					In the endless night, our fleeting mark.</em></p>
+				</div>
+				<div class="post-date">August 23, 2024</div>
+				<hr />
+			</article>
+		</main>
 
-	<div class="spacer"></div>
-
-	<footer>
-		<p>© 2024 <a href="https://xinyue.me">Xinyue Wang</a>, All Rights Reserved.</p>
-	</footer>
+		<footer>
+			<p>© 2024 <a href="https://xinyue.me">Xinyue Wang</a>, All Rights Reserved.</p>
+		</footer>
+	</div>
 </body>
 </html>
+
