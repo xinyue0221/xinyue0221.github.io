@@ -1,107 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poema - A Portfolio by Xinyue Wang</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Crimson Text', serif;
-            background-color: #ffffff;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .portfolio {
-            max-width: 800px;
-            width: 100%;
-            background: #fff;
-            padding: 60px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            font-family: 'Crimson Text', serif;
-            font-size: 3.5em;
-            font-weight: 700;
-            margin-bottom: 0.5em;
-        }
-        h2 {
-            font-size: 1.5em;
-            font-weight: 400;
-            color: #666;
-            margin-bottom: 40px;
-        }
-        .poem {
-            margin-bottom: 50px;
-        }
-        .poem-title {
-            font-size: 2em;
-            color: #444;
-            font-weight: bold;
-        }
-        .poem-date {
-            font-size: 0.9em;
-            color: #999;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        .poem-content {
-            margin-top: 20px;
-            font-style: italic;
-            color: #555;
-            font-size: 1.2em;
-        }
-        hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin: 50px 0;
-        }
-    </style>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Poema</title>
+
+	<!-- Include Google Fonts for 'Crimson Text' -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+	<!-- Include necessary CSS styles -->
+	<link rel="stylesheet" href="styles.css" />
+
+	<!-- Custom Styles -->
+	<style>
+		body {
+			background-color: #ffffff;
+			color: #252525;
+			font-family: 'Crimson Text', serif;
+			font-size: 1rem;
+			line-height: 1.6;
+			padding: 1.5rem;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: 'Crimson Text', serif;
+			font-weight: 400;
+			line-height: 1.125;
+		}
+		h1 {
+			font-size: 2.5rem;
+			font-style: italic;
+			font-weight: 700;
+		}
+		h2 {
+			font-size: 1.75rem;
+		}
+		a {
+			color: #252525;
+			text-decoration: underline;
+		}
+		a:hover {
+			text-decoration: none;
+		}
+		.site-title a {
+			text-decoration: none;
+		}
+		.site-title a:hover {
+			text-decoration: underline;
+		}
+		.header-container {
+			padding-top: 3.38rem;
+			padding-bottom: 0;
+		}
+		.navigation {
+			font-size: 1rem;
+			margin-top: 1rem;
+		}
+		.navigation ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			gap: 1.5rem;
+		}
+		.navigation li {
+			margin: 0;
+		}
+		hr {
+			border: none;
+			border-top: 1px solid #F0F0F0;
+			margin: 3.38rem 0;
+		}
+		.post-content p {
+			margin: 0 0 1.5rem;
+		}
+		.post-date {
+			color: #5c5c5c;
+			font-size: 0.9rem;
+			font-style: italic;
+			font-weight: 400;
+			margin-bottom: 1.5rem;
+		}
+		footer {
+			text-align: center;
+			padding: 2.25rem 0;
+		}
+		footer p {
+			margin: 0;
+		}
+		.spacer {
+			height: 5.06rem;
+		}
+	</style>
 </head>
+
 <body>
-    <div class="portfolio">
-        <h1>Poema</h1>
-        <h2>By Xinyue Wang</h2>
+	<header>
+		<div class="header-container">
+			<h1 class="site-title"><a href="poem.html">Poema</a></h1>
+			<nav class="navigation">
+				<ul>
+					<li><a href="index.html">Xinyue Wang</a></li>
+				</ul>
+			</nav>
+			<hr />
+		</div>
+	</header>
 
-        <div class="poem">
-            <div class="poem-title">Saturnine</div>
-            <div class="poem-content">
-                <p>Thus I mourn amidst the watchers of the skies,<br>
-                Enshrined in melancholy, where no solace lies.</p>
-            </div>
-            <div class="poem-date">October 2, 2024</div>
-        </div>
+	<main>
+		<article>
+			<h2>Saturnine</h2>
+			<div class="post-content">
+				<p><em>Thus I mourn amidst the watchers of the skies,<br>
+				Enshrined in melancholy, where no solace lies.</em></p>
+			</div>
+			<div class="post-date">October 2, 2024</div>
+			<hr />
+		</article>
 
-        <hr>
+		<article>
+			<h2>Evanescence</h2>
+			<div class="post-content">
+				<p><em>Stars fade, galaxies drift in silent divide,<br>
+				The universe marches, indifferent and wide.<br>
+				In this vast expanse, we might lose our way,<br>
+				But hold this moment, let it not stray.</em></p>
+				<p><em>For here and now, a fleeting glance,<br>
+				A singular dance in the cosmic expanse.<br>
+				Remember this breath, this heartbeat's spark,<br>
+				In the endless night, our fleeting mark.</em></p>
+			</div>
+			<div class="post-date">August 23, 2024</div>
+			<hr />
+		</article>
+	</main>
 
-        <div class="poem">
-            <div class="poem-title">Evanescence</div>
-            <div class="poem-content">
-                <p>Stars fade, galaxies drift in silent divide,<br>
-                The universe marches, indifferent and wide.<br>
-                In this vast expanse, we might lose our way,<br>
-                But hold this moment, let it not stray.</p>
-                <p>For here and now, a fleeting glance,<br>
-                A singular dance in the cosmic expanse.<br>
-                Remember this breath, this heartbeat’s spark,<br>
-                In the endless night, our fleeting mark.</p>
-            </div>
-            <div class="poem-date">August 23, 2024</div>
-        </div>
-        
-         <hr>
-    
-    <footer>
-        <p class="has-text-align-center">&copy; 2024 <a href="https://xinyue.me" data-type="link" data-id="https://xinyue.me">Xinyue Wang</a>, All Rights Reserved.</p>
-    </footer>
+	<div class="spacer"></div>
+
+	<footer>
+		<p>© 2024 <a href="https://xinyue.me">Xinyue Wang</a>, All Rights Reserved.</p>
+	</footer>
+</body>
 </html>
