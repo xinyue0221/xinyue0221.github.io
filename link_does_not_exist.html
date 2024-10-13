@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Does Not Exist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #8C1515;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-container {
+            text-align: center;
+            padding: 50px;
+            border: 3px dashed #8C1515;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        a.button {
+            text-decoration: none;
+            color: #fff;
+            background-color: #8C1515;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #a31a1a;
+        }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Link Does Not Exist</h1>
+        <p>The short URL you clicked was deleted or never existed. Please check that you entered or copy-pasted the short link correctly!</p>
+        <a href="javascript:history.back()" class="button">Go Back</a>
+    </div>
+    <footer>
+        © 2024 Xinyue Wang, All Rights Reserved.
+    </footer>
+</body>
+</html>
