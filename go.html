@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f5f5f5;
+            background-color: #f0f0f0; /* Updated to match the second page */
             color: #8C1515;
             font-family: 'Montserrat', sans-serif;
             display: flex;
@@ -17,13 +17,13 @@
             height: 100vh;
             margin: 0;
         }
-        .container {
+        .error-container { /* Changed from .container to .error-container */
             text-align: center;
-            padding: 40px;
-            border: 2px solid #8C1515;
-            border-radius: 10px;
+            padding: 50px; /* Increased padding to match the second page */
+            border: 3px dashed #8C1515; /* Updated border style */
+            border-radius: 15px; /* Increased border radius */
             background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); /* Updated box-shadow */
         }
         h1 {
             font-size: 3em;
@@ -54,13 +54,14 @@
     </style>
 </head>
 <body>
-    <div class="container">
- <p>
-            go.xinyue.me is a branded short domain of <a href="https://xinyue.me" style="color: #8c1515; text-decoration: underline;">xinyue.me</a>.
+    <div class="error-container">
+        <h1>go.xinyue.me</h1>
+        <p>
+            go.xinyue.me is a branded short domain of <a href="https://xinyue.me" style="color: #8C1515; text-decoration: underline;">xinyue.me</a>.
             <br><br>
             If you are here by mistake, you can go back to the last page.
         </p>
-        <a href="javascript:history.back()">Go Back</a>
+        <a href="javascript:history.back()" class="button">Go Back</a>
     </div>
     <footer>
         © 2024 Xinyue Wang, All Rights Reserved.
