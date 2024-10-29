@@ -13,13 +13,14 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
       position: relative;
     }
 
-    .timer {
+    .timer-container {
       text-align: center;
+      margin-bottom: 40px;
     }
 
     h1 {
@@ -61,26 +62,75 @@
       font-size: 0.8em;
       color: #AAAAAA;
     }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .countdown {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .countdown div {
+        width: 80px;
+        padding: 10px 15px;
+      }
+
+      .countdown span {
+        font-size: 1.5em;
+      }
+
+      .label {
+        font-size: 0.8em;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="timer">
+  <!-- First Timer: Next Essay Due -->
+  <div class="timer-container">
     <h1>Next HSC Essay Due In:</h1>
-    <div class="countdown">
+    <div class="countdown" id="countdown-essay">
       <div>
-        <span id="days">0</span>
+        <span id="days-essay">0</span>
         <div class="label">Days</div>
       </div>
       <div>
-        <span id="hours">0</span>
+        <span id="hours-essay">0</span>
         <div class="label">Hours</div>
       </div>
       <div>
-        <span id="minutes">0</span>
+        <span id="minutes-essay">0</span>
         <div class="label">Minutes</div>
       </div>
       <div>
-        <span id="seconds">0</span>
+        <span id="seconds-essay">0</span>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Timer: Next MWA Essay Due -->
+  <div class="timer-container">
+    <h1>Next MWA Essay Due In:</h1>
+    <div class="countdown" id="countdown-mwa">
+      <div>
+        <span id="days-mwa">0</span>
+        <div class="label">Days</div>
+      </div>
+      <div>
+        <span id="hours-mwa">0</span>
+        <div class="label">Hours</div>
+      </div>
+      <div>
+        <span id="minutes-mwa">0</span>
+        <div class="label">Minutes</div>
+      </div>
+      <div>
+        <span id="seconds-mwa">0</span>
         <div class="label">Seconds</div>
       </div>
     </div>
@@ -91,33 +141,52 @@
   </footer>
 
   <script>
-    // Set the date of the next essay due in PST
-    // Format: 'YYYY-MM-DDTHH:MM:SS-08:00' (ISO 8601 format with PST offset)
+    // Function to initialize a countdown timer
+    function initializeCountdown(targetDate, elementIds) {
+      const countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // Calculate time components
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Update the HTML
+        document.getElementById(elementIds.days).textContent = days;
+        document.getElementById(elementIds.hours).textContent = hours;
+        document.getElementById(elementIds.minutes).textContent = minutes;
+        document.getElementById(elementIds.seconds).textContent = seconds;
+
+        // If the countdown is finished
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          const parent = document.getElementById(elementIds.parent);
+          parent.innerHTML = '<h1>Essay Due!</h1>';
+        }
+      }, 1000);
+    }
+
+    // Initialize First Timer: Next HSC Essay Due
     const essayDueDate = new Date('2024-11-04T21:00:00-08:00').getTime();
+    initializeCountdown(essayDueDate, {
+      days: 'days-essay',
+      hours: 'hours-essay',
+      minutes: 'minutes-essay',
+      seconds: 'seconds-essay',
+      parent: 'countdown-essay'
+    });
 
-    // Update the countdown every second
-    const countdownInterval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = essayDueDate - now;
-
-      // Calculate time components
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // Update the HTML
-      document.getElementById('days').textContent = days;
-      document.getElementById('hours').textContent = hours;
-      document.getElementById('minutes').textContent = minutes;
-      document.getElementById('seconds').textContent = seconds;
-
-      // If the countdown is finished
-      if (distance < 0) {
-        clearInterval(countdownInterval);
-        document.querySelector('.timer').innerHTML = '<h1>Essay Due!</h1>';
-      }
-    }, 1000);
+    // Initialize Second Timer: Next MWA Essay Due
+    const mwaEssayDueDate = new Date('2024-12-20T23:59:59-08:00').getTime();
+    initializeCountdown(mwaEssayDueDate, {
+      days: 'days-mwa',
+      hours: 'hours-mwa',
+      minutes: 'minutes-mwa',
+      seconds: 'seconds-mwa',
+      parent: 'countdown-mwa'
+    });
   </script>
 </body>
 </html>
