@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Next Essay Due Timer</title>
+  <style>
+    /* Use Consolas font */
+    body {
+      font-family: 'Consolas', monospace;
+      background-color: #000000;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    .timer {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #FFFFFF;
+      padding-bottom: 10px;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .countdown div {
+      background-color: #1A1A1A;
+      padding: 15px 20px;
+      border: 1px solid #FFFFFF;
+      border-radius: 5px;
+    }
+
+    .countdown span {
+      display: block;
+      font-size: 1.8em;
+      margin-bottom: 5px;
+    }
+
+    .label {
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8em;
+      color: #AAAAAA;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer">
+    <h1>Next HSC Essay Due In:</h1>
+    <div class="countdown">
+      <div>
+        <span id="days">0</span>
+        <div class="label">Days</div>
+      </div>
+      <div>
+        <span id="hours">0</span>
+        <div class="label">Hours</div>
+      </div>
+      <div>
+        <span id="minutes">0</span>
+        <div class="label">Minutes</div>
+      </div>
+      <div>
+        <span id="seconds">0</span>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2024 Xinyue Wang, All Rights Reserved.
+  </footer>
+
+  <script>
+    // Set the date of the next essay due in PST
+    // Format: 'YYYY-MM-DDTHH:MM:SS-08:00' (ISO 8601 format with PST offset)
+    const essayDueDate = new Date('2024-11-04T21:00:00-08:00').getTime();
+
+    // Update the countdown every second
+    const countdownInterval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = essayDueDate - now;
+
+      // Calculate time components
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Update the HTML
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
+
+      // If the countdown is finished
+      if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.querySelector('.timer').innerHTML = '<h1>Essay Due!</h1>';
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
