@@ -92,7 +92,7 @@
 <body>
   <!-- First Timer: Next Essay Due -->
   <div class="timer-container">
-    <h1>Next HSC Essay Due In:</h1>
+    <h1>Next HSC Project Due In:</h1>
     <div class="countdown" id="countdown-essay">
       <div>
         <span id="days-essay">0</span>
@@ -163,13 +163,13 @@
         if (distance < 0) {
           clearInterval(countdownInterval);
           const parent = document.getElementById(elementIds.parent);
-          parent.innerHTML = '<h1>Essay Due!</h1>';
+          parent.innerHTML = '<h1>Assignment Due!</h1>';
         }
       }, 1000);
     }
 
     // Initialize First Timer: Next HSC Essay Due
-    const essayDueDate = new Date('2024-11-04T20:59:59-08:00').getTime();
+    const essayDueDate = new Date('2024-12-08T23:59:59-08:00').getTime();
     initializeCountdown(essayDueDate, {
       days: 'days-essay',
       hours: 'hours-essay',
