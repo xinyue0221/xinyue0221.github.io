@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stanford Next Holiday Countdown</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Container Styling */
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* Headings */
+        h1, h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        /* Countdown Timer */
+        #countdown {
+            font-size: 2em;
+            margin: 20px 0;
+            letter-spacing: 1px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #333333;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-top: 30px;
+            height: 30px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #00ffea;
+            line-height: 30px;
+            color: #121212;
+            text-align: center;
+            transition: width 1s ease;
+            font-weight: bold;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #b0b0b0;
+        }
+
+        /* Notes Section */
+        .notes {
+            margin-top: 40px;
+            text-align: left;
+            font-size: 0.9em;
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        .notes h3 {
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        .notes ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            font-size: 0.8em;
+            color: #707070;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            #countdown {
+                font-size: 1.5em;
+            }
+
+            .progress-text {
+                font-size: 1em;
+            }
+
+            .notes {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Next Holiday at Stanford</h1>
+        <h2>Thanksgiving Holiday!</h2>
+        <div id="countdown">Loading countdown...</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">0.0000%</div>
+        </div>
+        <div class="progress-text" id="progressText">Semester progress: 0.0000%</div>
+
+        <!-- Notes Section -->
+        <div class="notes">
+            <h3>Notes:</h3>
+            <ul>
+                <li>I have set the holiday start time as the end of the last instruction day of the last class period, which is 9 PM PT, before the first day of holiday.</li>
+                <li>I used the end of study days as the end date of the semester.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2024 Xinyue Wang, All Rights Reserved.
+    </footer>
+
+    <script>
+        // Function to convert PT time to UTC considering daylight saving time
+        function getPTDate(year, month, day, hour, minute, second) {
+            // Create a date string in PT
+            // Note: During Daylight Saving Time (second Sunday in March to first Sunday in November), PT is UTC-7
+            // Outside DST, PT is UTC-8. For simplicity, we'll assume PT is UTC-7 as of the target dates.
+            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}-07:00`;
+            return new Date(dateStr).getTime();
+        }
+
+        // Set the target holiday date: November 26, 2024, 9:00 PM PT
+        const holidayUTC = getPTDate(2024, 11, 26, 21, 0, 0); // PT is UTC-7 during daylight time (DST)
+
+        // Semester start and end dates in PT
+        const semesterStartUTC = getPTDate(2024, 8, 21, 0, 0, 0); // August 21, 2024
+        const semesterEndUTC = getPTDate(2024, 12, 13, 23, 59, 59); // December 13, 2024
+
+        // Update countdown and progress every second
+        setInterval(function() {
+            const now = new Date().getTime();
+
+            // Countdown Timer
+            const distance = holidayUTC - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "The holiday has started!";
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML = 
+                    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            // Semester Progress
+            const semesterDuration = semesterEndUTC - semesterStartUTC;
+            const timePassed = now - semesterStartUTC;
+
+            let progressPercent = (timePassed / semesterDuration) * 100;
+            progressPercent = Math.min(Math.max(progressPercent, 0), 100); // Clamp between 0 and 100
+
+            // Format to 4 decimal places
+            const progressPercentFixed = progressPercent.toFixed(4);
+
+            // Update Progress Bar
+            document.getElementById("progressBar").style.width = progressPercentFixed + "%";
+            document.getElementById("progressBar").innerHTML = progressPercentFixed + "%";
+            document.getElementById("progressText").innerHTML = "Semester progress: " + progressPercentFixed + "%";
+        }, 1000);
+    </script>
+</body>
+</html>
