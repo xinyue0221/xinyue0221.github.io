@@ -1,222 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stanford Next Holiday Countdown</title>
-    <style>
-        /* Reset some default styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stanford Holiday Countdown</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* Body Styling */
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #121212;
-            color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    /* Body Styling */
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-        /* Container Styling */
-        .container {
-            background-color: #1e1e1e;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-        }
+    /* Container Styling */
+    .container {
+      background-color: #1e1e1e;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
 
-        /* Headings */
-        h1, h2 {
-            color: #ffffff;
-            margin-bottom: 20px;
-        }
+    /* Headings */
+    h1, h2 {
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
 
-        h1 {
-            font-size: 2.5em;
-            letter-spacing: 2px;
-        }
+    h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+    }
 
-        h2 {
-            font-size: 2em;
-            margin-bottom: 30px;
-        }
+    h2 {
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
 
-        /* Countdown Timer */
-        #countdown {
-            font-size: 2em;
-            margin: 20px 0;
-            letter-spacing: 1px;
-        }
+    /* Countdown Timer */
+    #countdown {
+      font-size: 2em;
+      margin: 20px 0;
+      letter-spacing: 1px;
+    }
 
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            background-color: #333333;
-            border-radius: 25px;
-            overflow: hidden;
-            margin-top: 30px;
-            height: 30px;
-        }
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      background-color: #333333;
+      border-radius: 25px;
+      overflow: hidden;
+      margin-top: 30px;
+      height: 30px;
+    }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #00ffea;
-            line-height: 30px;
-            color: #121212;
-            text-align: center;
-            transition: width 1s ease;
-            font-weight: bold;
-        }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #00ffea;
+      line-height: 30px;
+      color: #121212;
+      text-align: center;
+      transition: width 1s ease;
+      font-weight: bold;
+    }
 
-        .progress-text {
-            margin-top: 10px;
-            font-size: 1.2em;
-            color: #b0b0b0;
-        }
+    .progress-text {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #b0b0b0;
+    }
 
-        /* Notes Section */
-        .notes {
-            margin-top: 40px;
-            text-align: left;
-            font-size: 0.9em;
-            color: #a0a0a0;
-            line-height: 1.6;
-        }
+    /* Notes Section */
+    .notes {
+      margin-top: 40px;
+      text-align: left;
+      font-size: 0.9em;
+      color: #a0a0a0;
+      line-height: 1.6;
+    }
 
-        .notes h3 {
-            margin-bottom: 10px;
-            color: #ffffff;
-            font-size: 1.1em;
-        }
+    .notes h3 {
+      margin-bottom: 10px;
+      color: #ffffff;
+      font-size: 1.1em;
+    }
 
-        .notes ul {
-            list-style-type: disc;
-            margin-left: 20px;
-        }
+    .notes ul {
+      list-style-type: disc;
+      margin-left: 20px;
+    }
 
-        /* Footer */
-        footer {
-            margin-top: 50px;
-            font-size: 0.8em;
-            color: #707070;
-        }
+    /* Footer */
+    footer {
+      margin-top: 50px;
+      font-size: 0.8em;
+      color: #707070;
+    }
 
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
 
-            h1 {
-                font-size: 2em;
-            }
+      h1 {
+        font-size: 2em;
+      }
 
-            h2 {
-                font-size: 1.5em;
-            }
+      h2 {
+        font-size: 1.5em;
+      }
 
-            #countdown {
-                font-size: 1.5em;
-            }
+      #countdown {
+        font-size: 1.5em;
+      }
 
-            .progress-text {
-                font-size: 1em;
-            }
+      .progress-text {
+        font-size: 1em;
+      }
 
-            .notes {
-                font-size: 0.8em;
-            }
-        }
-    </style>
+      .notes {
+        font-size: 0.8em;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Next Holiday at Stanford</h1>
-        <h2>Thanksgiving Holiday!</h2>
-        <div id="countdown">Loading countdown...</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar">0.0000%</div>
-        </div>
-        <div class="progress-text" id="progressText">Semester progress: 0.0000%</div>
-
-        <!-- Notes Section -->
-        <div class="notes">
-            <h3>Notes:</h3>
-            <ul>
-                <li>I have set the holiday start time as the end of the last instruction day of the last class period, which is 9 PM PT, before the first day of holiday.</li>
-                <li>I used the end of study days as the end date of the semester.</li>
-            </ul>
-        </div>
+  <div class="container">
+    <h1>Next Holiday at Stanford</h1>
+    <h2 id="holidayName">Loading...</h2>
+    <div id="countdown">Loading countdown...</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">0.0000%</div>
     </div>
+    <div class="progress-text" id="progressText">Semester progress: 0.0000%</div>
 
-    <!-- Footer -->
-    <footer>
-        © 2024 Xinyue Wang, All Rights Reserved.
-    </footer>
+    <!-- Notes Section -->
+    <div class="notes">
+      <h3>Notes:</h3>
+      <ul>
+        <li>This will automatically show the next upcoming holiday. Once it ends, it switches to the next one.</li>
+        <li>The semester dates have been updated to Spring 2025 (Jan 13 – May 21, 2025).</li>
+      </ul>
+    </div>
+  </div>
 
-    <script>
-        // Function to convert PT time to UTC considering daylight saving time
-        function getPTDate(year, month, day, hour, minute, second) {
-            // Create a date string in PT
-            // Note: During Daylight Saving Time (second Sunday in March to first Sunday in November), PT is UTC-7
-            // Outside DST, PT is UTC-8. For simplicity, we'll assume PT is UTC-7 as of the target dates.
-            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}-07:00`;
-            return new Date(dateStr).getTime();
+  <!-- Footer -->
+  <footer>
+    © 2025 Xinyue Wang, All Rights Reserved.
+  </footer>
+
+  <script>
+    /************************************************************
+     * 1) Semester info
+     ************************************************************/
+    // Convert CA time to UTC (simplified: assume UTC-8 for these dates; adjust if DST applies).
+    function getCATime(year, month, day, hour, minute, second) {
+      // month is 1-based, so if you're using month in a JavaScript Date, account for that offset
+      const isoString = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}-08:00`;
+      return new Date(isoString).getTime();
+    }
+
+    // Spring 2025 semester start & end
+    const semesterStartUTC = getCATime(2025, 1, 13, 0, 0, 0);      // Jan 13, 2025 00:00
+    const semesterEndUTC   = getCATime(2025, 5, 21, 23, 59, 59);   // May 21, 2025 23:59:59
+
+    /************************************************************
+     * 2) Holidays for Spring 2025
+     ************************************************************/
+    // Each holiday has a name, start, end in UTC ms.
+    // Times are based on the user-provided "start time / end time" in CA time (UTC-8 for simplicity).
+    const holidays = [
+      {
+        name: "Martin Luther King Jr. Holiday",
+        start: getCATime(2025, 1, 16, 21, 0, 0), // Jan 16, 2025 9:00 PM
+        end:   getCATime(2025, 1, 21, 6, 0, 0)   // Jan 21, 2025 6:00 AM
+      },
+      {
+        name: "Presidents' Day Holiday",
+        start: getCATime(2025, 2, 13, 21, 0, 0), // Feb 13, 2025 9:00 PM
+        end:   getCATime(2025, 2, 18, 6, 0, 0)   // Feb 18, 2025 6:00 AM
+      },
+      {
+        name: "Spring Break",
+        start: getCATime(2025, 3, 20, 21, 0, 0), // Mar 20, 2025 9:00 PM
+        end:   getCATime(2025, 3, 31, 6, 0, 0)   // Mar 31, 2025 6:00 AM
+      },
+      {
+        name: "Memorial Day Holiday",
+        start: getCATime(2025, 5, 26, 0, 0, 0),  // May 26, 2025 0:00
+        end:   getCATime(2025, 5, 26, 23, 59, 59) // May 26, 2025 23:59:59
+      }
+    ];
+
+    /************************************************************
+     * 3) Determine which holiday to show (only one at a time)
+     ************************************************************/
+    function getActiveHoliday(now) {
+      // Returns the first holiday whose 'end' time is still in the future
+      // i.e., we haven't passed it yet.
+      for (let i = 0; i < holidays.length; i++) {
+        if (now < holidays[i].end) {
+          return i;
         }
+      }
+      // If none are left, return -1
+      return -1;
+    }
 
-        // Set the target holiday date: November 26, 2024, 9:00 PM PT
-        const holidayUTC = getPTDate(2024, 11, 26, 21, 0, 0); // PT is UTC-7 during daylight time (DST)
+    /************************************************************
+     * 4) Update the countdown & progress bar
+     ************************************************************/
+    function update() {
+      const now = Date.now();
 
-        // Semester start and end dates in PT
-        const semesterStartUTC = getPTDate(2024, 8, 21, 0, 0, 0); // August 21, 2024
-        const semesterEndUTC = getPTDate(2024, 12, 13, 23, 59, 59); // December 13, 2024
+      // 4a) Figure out which holiday to display
+      const idx = getActiveHoliday(now);
+      const holidayNameEl = document.getElementById("holidayName");
+      const countdownEl   = document.getElementById("countdown");
 
-        // Update countdown and progress every second
-        setInterval(function() {
-            const now = new Date().getTime();
+      if (idx === -1) {
+        // No more upcoming holidays
+        holidayNameEl.innerHTML = "No more holidays this semester!";
+        countdownEl.innerHTML = "Enjoy the rest of your semester!";
+      } else {
+        // We have an active holiday
+        const { name, start, end } = holidays[idx];
+        holidayNameEl.innerHTML = name;
 
-            // Countdown Timer
-            const distance = holidayUTC - now;
+        if (now < start) {
+          // Not started yet -> countdown to start
+          const distance = start - now;
+          if (distance <= 0) {
+            countdownEl.innerHTML = "The holiday has started!";
+          } else {
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-            if (distance < 0) {
-                document.getElementById("countdown").innerHTML = "The holiday has started!";
-            } else {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            countdownEl.innerHTML = `Starts in: ${d}d ${h}h ${m}m ${s}s`;
+          }
+        } else if (now >= start && now < end) {
+          // Holiday is ongoing -> countdown to end
+          const distance = end - now;
+          const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-                document.getElementById("countdown").innerHTML = 
-                    `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            }
+          countdownEl.innerHTML = `Ends in: ${d}d ${h}h ${m}m ${s}s`;
+        } else {
+          // We shouldn't reach here normally since we skip ended holidays
+          countdownEl.innerHTML = "The holiday has ended!";
+        }
+      }
 
-            // Semester Progress
-            const semesterDuration = semesterEndUTC - semesterStartUTC;
-            const timePassed = now - semesterStartUTC;
+      // 4b) Semester progress
+      const semesterDuration = semesterEndUTC - semesterStartUTC;
+      const timePassed = now - semesterStartUTC;
+      let progressPercent = (timePassed / semesterDuration) * 100;
+      progressPercent = Math.min(Math.max(progressPercent, 0), 100); // clamp
 
-            let progressPercent = (timePassed / semesterDuration) * 100;
-            progressPercent = Math.min(Math.max(progressPercent, 0), 100); // Clamp between 0 and 100
+      const progressPercentFixed = progressPercent.toFixed(4); // Format to 4 decimal places
+      document.getElementById("progressBar").style.width = progressPercentFixed + "%";
+      document.getElementById("progressBar").innerHTML = progressPercentFixed + "%";
+      document.getElementById("progressText").innerHTML = "Semester progress: " + progressPercentFixed + "%";
+    }
 
-            // Format to 4 decimal places
-            const progressPercentFixed = progressPercent.toFixed(4);
-
-            // Update Progress Bar
-            document.getElementById("progressBar").style.width = progressPercentFixed + "%";
-            document.getElementById("progressBar").innerHTML = progressPercentFixed + "%";
-            document.getElementById("progressText").innerHTML = "Semester progress: " + progressPercentFixed + "%";
-        }, 1000);
-    </script>
+    /************************************************************
+     * 5) Call update() every second
+     ************************************************************/
+    setInterval(update, 1000);
+    // Run it once at startup
+    update();
+  </script>
 </body>
 </html>
