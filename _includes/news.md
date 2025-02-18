@@ -3,11 +3,11 @@
 <h2 style="margin: 60px 0px 10px;">News</h2>
 
 <ul>
-  <li><strong>[Feb. 2025]</strong> Starting a new research project (<a href="http://web.goalgetit.org">web.goalgetit.org</a>) on double star systems.</li>
+  <li><strong>[Feb. 2025]</strong> Starting a new <a href="http://web.goalgetit.org">research project</a> on double star systems.</li>
   <li><strong>[Feb. 2025]</strong> Learned drive.</li>
-  <li><strong>[Oct. 2024]</strong> Honored to join Dr. Nick DeMello's (<a href="https://spcs.instructure.com/courses/3603">lab</a>) as a research assistant.</li>
-  <li><strong>[Sep. 2024]</strong> Assisted in creating Goal Get It! Homeschool Organization (<a href="http://web.goalgetit.org">web.goalgetit.org</a>).</li>
-  <li><strong>[Aug. 2024]</strong> Honored to be International Student Alliance Leader (<a href="https://ohs.stanford.edu">OHS</a>).</li>
+  <li><strong>[Oct. 2024]</strong> Honored to join <a href="https://spcs.instructure.com/courses/3603">Dr. Nick DeMello's lab</a> as a research assistant.</li>
+  <li><strong>[Sep. 2024]</strong> Assisted in creating the <a href="http://web.goalgetit.org">Goal Get It! Homeschool Organization</a>.</li>
+  <li><strong>[Aug. 2024]</strong> Honored to be International Student Alliance Leader at <a href="https://ohs.stanford.edu">Stanford OHS</a>.</li>
   <li><strong>[Aug. 2024]</strong> Honored to be the teaching assistant for <a href="https://spcs.instructure.com/courses/8703">Single Variable Calculus</a> and <a href="https://spcs.instructure.com/courses/3603">General Chemistry</a>.</li>
   <li><strong>[Jul. 2024]</strong> Spent my summer at <a href="https://stanford.edu">Stanford University</a> and <a href="https://washu.edu">Washington University in St. Louis</a>.</li>
   <li><strong>[Apr. 2024]</strong> Started Pixel Pulse.</li>
