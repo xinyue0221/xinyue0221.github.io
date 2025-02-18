@@ -5,7 +5,7 @@
 <ul>
   <li><strong>[Feb. 2025]</strong> Starting a new research project (<a href="http://web.goalgetit.org">web.goalgetit.org</a>) on double star systems.</li>
   <li><strong>[Feb. 2025]</strong> Learned drive.</li>
-  <li><strong>[Oct. 2024]</strong> Honored to join Dr. Nick DeMellos lab (<a href="https://spcs.instructure.com/courses/3603">link</a>) as a research assistant.</li>
+  <li><strong>[Oct. 2024]</strong> Honored to join Dr. Nick DeMello's (<a href="https://spcs.instructure.com/courses/3603">lab</a>) as a research assistant.</li>
   <li><strong>[Sep. 2024]</strong> Assisted in creating Goal Get It! Homeschool Organization (<a href="http://web.goalgetit.org">web.goalgetit.org</a>).</li>
   <li><strong>[Aug. 2024]</strong> Honored to be International Student Alliance Leader (<a href="https://ohs.stanford.edu">OHS</a>).</li>
   <li><strong>[Aug. 2024]</strong> Honored to be the teaching assistant for <a href="https://spcs.instructure.com/courses/8703">Single Variable Calculus</a> and <a href="https://spcs.instructure.com/courses/3603">General Chemistry</a>.</li>
