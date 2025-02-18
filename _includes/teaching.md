@@ -4,15 +4,18 @@
 
 <ul>
   <li>
-    Head Teaching Assistant, <a href="https://cms.sic.saarland/hlcvss22/">High-Level Computer Vision</a> at <a href="https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/teaching/courses-1">Max Planck Institutes</a>, 2022
+    Fall 2024: <a href="https://spcs.instructure.com/courses/8314">Single Variable Calculus</a>
   </li>
   <li>
-    Student Mentor, <a href="https://sites.google.com/view/cvpr-academy/">CVPR Academy</a> at <a href="https://cvpr2022.thecvf.com/">IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</a>, 2022
+    Spring 2025: <a href="https://spcs.instructure.com/courses/8703">Single Variable Calculus at Stanford University Online High School</a>
   </li>
   <li>
-    Teaching Assistant, <a href="https://cms.sic.saarland/hlcvss21/">High-Level Computer Vision</a> at <a href="https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/teaching/courses-1">Max Planck Institute</a>, 2021
+    Fall 2024: <a href="https://spcs.instructure.com/courses/3603">General Chemistry</a>
   </li>
   <li>
-    Teaching Assistant, <a href="">Digital Image Processing</a> at <a href="http://www.tju.edu.cn/english/index.htm/">Tianjin University</a>, 2017
+    Spring 2025: <a href="https://spcs.instructure.com/courses/3603">General Chemistry</a>
+  </li>
+  <li>
+    Fall 2025: <a href="https://spcs.instructure.com/courses/3603">Introduction to Organic Chemistry</a>
   </li>
 </ul>
