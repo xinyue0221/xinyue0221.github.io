@@ -9,7 +9,7 @@ email: wxinyue (at) ohs.stanford.edu
 # Search Engine Optimization (SEO)
 keywords: xinyue wang, wang xinyue, xinyuewang, wangxinyue, xinyue wang stanford
 canonical: https://xinyue.me
-description: Xinyue is a student at Stanford University Online High School. His research lies in gender and sexuality studies.
+description: Xinyue is a student at Stanford University Online High School. His research lies in astrophysics, organic chemistry, and gender and sexuality studies.
 
 # The option is used to enable the Johns Hopkins template.
 enable_hopkins_logo: true
@@ -19,7 +19,7 @@ enable_last_update: false
 
 # Links
 link_type: icon #text/icon
-google_scholar: 
+google_scholar: https://scholar.google.com/citations?user=YR024xMAAAAJ
 cv_link: /assets/files/XinyueWang%20-%20Curriculum_Vitae%20-%20092024.pdf
 github_link: https://github.com/xinyue0221/
 linkedin: https://www.linkedin.com/in/xinyue-wang-37168a248/
@@ -31,13 +31,13 @@ favicon: ./assets/img/favicon.png
 favicon_dark: ./assets/img/favicon-dark.png
 
 # Footnotes
-footnote: © 2024 Xinyue Wang
+footnote: © 2025 Xinyue Wang
 footnote_link: https://xinyue.me
 
 # Analytics
 # Please remove the following lines about analytics services if you fork my project. 
 # Otherwise, the analytics information of your website will be recorded to my ClustrMaps accounts.
-clustrmaps_id: 
+clustrmaps_id: gVrb4tt08sR8d8EsR8ko_yfONFk4Ky4VkhA9S2lBE0k
 
 # The following files will be removed from the generated website.
 exclude:
