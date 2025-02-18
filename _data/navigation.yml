@@ -10,14 +10,14 @@ main:
   #- title: "Talks"
   #  url: ./#invited-talks
 
-  #- title: "Teaching"
-  #  url: ./#teaching
+  - title: "Teaching"
+    url: ./#teaching
 
   - title: "Publications"
     url: ./#publications
 
-  #- title: "News"
-  #  url: ./#news
+  - title: "Blog"
+    url: https://blog.xinyue.me
 
   - title: "Bio"
     url: ./#about-me
