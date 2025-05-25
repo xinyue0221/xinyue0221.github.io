@@ -9,7 +9,7 @@ email: wxinyue (at) ohs.stanford.edu
 # Search Engine Optimization (SEO)
 keywords: xinyue wang, wang xinyue, xinyuewang, wangxinyue, xinyue wang stanford
 canonical: https://xinyue.me
-description: Xinyue is a student at Stanford University Online High School. His research lies in astrophysics, organic chemistry, and gender and sexuality studies.
+description: Xinyue is a student at Stanford University Online High School.
 
 # The option is used to enable the Johns Hopkins template.
 enable_hopkins_logo: true
@@ -20,7 +20,7 @@ enable_last_update: false
 # Links
 link_type: icon #text/icon
 google_scholar: https://scholar.google.com/citations?user=YR024xMAAAAJ
-cv_link: /assets/files/XinyueWang%20-%20Curriculum_Vitae%20-%20092024.pdf
+cv_link: /assets/files/cv.pdf
 github_link: https://github.com/xinyue0221/
 linkedin: https://www.linkedin.com/in/xinyue-wang-37168a248/
 twitter: https://x.com/fULxY5rT0SJWP2j/
