@@ -6,4 +6,7 @@
 <strong>Primary Email:</strong> <email>wxinyue (at) ohs.stanford.edu</email>
 <br />
 <strong>Email:</strong> <email>xinyue (at) xinyue.me</email>
-
+<br />
+<strong>Email:</strong> <email>wxinyue (at) stanford.edu</email>
+<br />
+<strong>Email:</strong> <email>xinyue.wang (at) stanford.edu</email>
