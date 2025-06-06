@@ -10,6 +10,8 @@ I'm Xinyue Wang, a student at [Stanford University](https://www.stanford.edu/) [
 
 My research bridges **quantum chemistry** and **computational methods** -- currently focused on creating innovative pH indicators and virtual lab experiences that make chemistry more accessible. I also explore **gender studies** through a mathematical lens, uncovering patterns in social dynamics. My work spans **computational chemistry**, **organic chemistry**, **quantum modeling**, **digital education**, and **quantitative social / emotional analysis**.
 
+Beyond the lab, I’m also a student activist and published op-ed writer, using my voice to speak out on justice, education, and youth civic engagement. Check out my **[pieces](https://xinyue.me/opinions)**!
+
 <strong style="color:#e74d3c; font-weight:600; display: none;">
     BLANK.
 </strong>
