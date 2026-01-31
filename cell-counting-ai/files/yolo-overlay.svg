@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400">
+  <defs>
+    <linearGradient id="bgY" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop stop-color="#1f2937" offset="0" />
+      <stop stop-color="#0f172a" offset="1" />
+    </linearGradient>
+    <linearGradient id="frameY" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop stop-color="#cbd5e1" offset="0" />
+      <stop stop-color="#9ca3af" offset="1" />
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="1400" fill="url(#bgY)"/>
+  <circle cx="700" cy="700" r="620" fill="#0b1224" stroke="url(#frameY)" stroke-width="14" opacity="0.8" />
+  <rect x="340" y="340" width="720" height="720" fill="none" stroke="#cbd5e1" stroke-width="6" opacity="0.45" stroke-dasharray="18 12"/>
+  <text x="50%" y="45%" fill="#facc15" font-family="'Inter', system-ui, sans-serif" font-size="58" font-weight="700" text-anchor="middle">YOLOv8 Overlay</text>
+  <text x="50%" y="54%" fill="#e2e8f0" font-family="'Inter', system-ui, sans-serif" font-size="28" font-weight="500" text-anchor="middle">Replace with your detection screenshot</text>
+</svg>

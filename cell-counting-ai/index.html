@@ -1,0 +1,1481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A plain-language guide to AI-assisted hemocytometer counting: why cell counts disagree, and what object detection vs segmentation can (and can’t) fix." />
+  <link rel="icon" type="image/png" href="https://xinyue.me/assets/img/favicon.png" />
+  <title>AI‑Assisted Hemocytometer Counting Workflow</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+
+    :root{
+      --ink:#111;
+      --muted:#4a4a4a;
+      --faint:#7a7a7a;
+      --rule:#e7e8ec;
+      --bg:#ffffff;
+      --soft:#f6f7fb;
+      --accent:#7a1f2b; /* Stanford-ish maroon */
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --serif: 'Merriweather', Georgia, Cambria, "Times New Roman", Times, serif;
+      --sans: 'Inter', -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    html,body{background:var(--bg); color:var(--ink); margin:0; padding:0;}
+    body{
+      font-family:var(--sans);
+      line-height:1.7;
+      font-size:18px;
+      min-height: 100vh;
+    }
+
+    /* Distill-like centered column with generous margins */
+    .page{
+      max-width: 1140px;
+      margin: 32px auto 64px;
+      padding: 42px 26px 64px;
+      background:#fff;
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.04);
+    }
+
+    header.title-block{
+      border: 1px solid var(--rule);
+      padding: 30px 28px;
+      margin-bottom: 30px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.05);
+    }
+    header.title-block h1{
+      font-family:var(--sans);
+      font-weight:700;
+      letter-spacing:-0.02em;
+      line-height:1.05;
+      font-size: 44px;
+      margin: 0 0 12px;
+    }
+    header.title-block .subtitle{
+      font-family:var(--sans);
+      color:var(--ink);
+      font-weight:500;
+      letter-spacing:-0.01em;
+      font-size: 19px;
+      margin: 0 0 18px;
+    }
+    header.title-block .byline{
+      font-family:var(--sans);
+      color:var(--muted);
+      font-size: 15px;
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:12px;
+      background: #fafafa;
+      border: 1px solid #eef0f4;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    }
+    header.title-block .byline .item{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background:#fff;
+      border: 1px solid #f1f1f1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    }
+    header.title-block .byline .icon{
+      width:34px;
+      height:34px;
+      border-radius: 10px;
+      background: rgba(122,31,43,0.10);
+      color: var(--accent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:14px;
+      letter-spacing:-0.01em;
+    }
+    header.title-block .byline .label{
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 4px;
+      font-weight:700;
+    }
+    header.title-block .byline .value{
+      color: var(--ink);
+      line-height: 1.55;
+      font-weight:500;
+    }
+    header.title-block .byline a{color:var(--accent); text-decoration:none;}
+    header.title-block .byline a:hover{text-decoration:underline;}
+
+    /* Two-column layout: main text + sidenotes on wide screens */
+    .content{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 26px;
+    }
+    article{
+      max-width: 760px;
+    }
+
+    h2{
+      font-family:var(--sans);
+      font-weight:700;
+      letter-spacing:-0.01em;
+      margin: 36px 0 12px;
+      font-size: 24px;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 6px;
+    }
+    h2::after{
+      content:'';
+      display:block;
+      width: 52px;
+      height: 3px;
+      background: var(--accent);
+      margin-top: 8px;
+      border-radius: 2px;
+    }
+    h3{
+      font-family:var(--sans);
+      font-weight:700;
+      margin: 24px 0 10px;
+      font-size: 19px;
+      color: var(--ink);
+    }
+    p{margin: 0 0 14px;}
+    strong{font-weight:700;}
+    em{font-style:italic;}
+
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    hr{
+      border:0;
+      border-top: 1px solid var(--rule);
+      margin: 26px 0;
+    }
+
+    /* Figures */
+    figure{
+      margin: 20px 0 24px;
+      padding: 0;
+    }
+    figure img{
+      width: 100%;
+      display:block;
+      border-radius: 14px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+      object-fit: cover;
+      background: var(--soft);
+    }
+    figure .placeholder{
+      border: 1px dashed #cfcfcf;
+      background: linear-gradient(135deg,#faf2f3,#f4f7fb);
+      padding: 18px;
+      border-radius: 12px;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 14px;
+      box-shadow: inset 0 0 0 1px rgba(122,31,43,0.08);
+    }
+    figcaption{
+      font-family: var(--sans);
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .figure-row{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      align-items:start;
+    }
+    .thumb-grid{
+      column-count: 3;
+      column-gap: 14px;
+    }
+    @media (max-width: 960px){
+      .thumb-grid{ column-count: 2; }
+    }
+    @media (max-width: 640px){
+      .thumb-grid{ column-count: 1; }
+    }
+    .thumb-grid figure{
+      break-inside: avoid;
+      margin: 0 0 14px;
+      background:#fff;
+      border:1px solid var(--rule);
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .thumb-grid figure img{
+      width:100%;
+      border-radius:8px;
+      object-fit: cover;
+      box-shadow:none;
+    }
+    .thumb-grid figcaption{
+      margin-top:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .full-width{
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    /* Inline code + blocks */
+    code{
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background:#f4f4f4;
+      padding: 0.12em 0.34em;
+      border-radius: 6px;
+    }
+    pre{
+      background:#f7f7f7;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 14px 14px;
+      overflow:auto;
+      margin: 14px 0 18px;
+    }
+    pre code{background:transparent; padding:0;}
+
+    /* Tables */
+    table{
+      border-collapse: collapse;
+      width: 100%;
+      font-family: var(--sans);
+      font-size: 13px;
+      margin: 16px 0 22px;
+    }
+    th, td{
+      border-top: 1px solid var(--rule);
+      padding: 10px 8px;
+      vertical-align: top;
+    }
+    th{
+      text-align:left;
+      color: var(--ink);
+      font-weight: 700;
+      border-top: 2px solid var(--rule);
+    }
+    td{color:var(--muted);}
+    .table-note{font-family:var(--sans); font-size:12px; color:var(--muted); margin-top:-10px; margin-bottom:20px;}
+
+    /* Sidenotes */
+    aside.sidenote{
+      display:block;
+      margin: 10px 0 16px;
+      padding: 12px 12px;
+      border-left: 3px solid var(--accent);
+      background: #fbf7f8;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+
+    /* Footnotes */
+    .footnotes{
+      border-top: 1px solid var(--rule);
+      margin-top: 34px;
+      padding-top: 18px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footnotes ol{margin: 8px 0 0 18px; padding:0;}
+    .footnotes li{margin: 10px 0;}
+    sup{font-size: 0.75em;}
+    sup a{color:var(--accent);}
+
+    /* Wide layout enhancements */
+    @media (min-width: 1080px){
+      .content{
+        grid-template-columns: 760px 1fr;
+        align-items:start;
+      }
+      .sidenotes-col{
+        position: sticky;
+        top: 22px;
+        padding-left: 10px;
+      }
+      .sidenotes-col .box{
+        border: 1px solid var(--rule);
+        border-radius: 12px;
+        padding: 14px 14px;
+        background: #fff;
+      }
+      .sidenotes-col h4{
+        font-family: var(--sans);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--faint);
+        margin: 0 0 10px;
+      }
+      .sidenotes-col p, .sidenotes-col li{
+        font-family: var(--sans);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .sidenotes-col ul{margin: 10px 0 0 18px;}
+    }
+    
+    /* Distill-ish citation links */
+a.dt-cite{
+  font-family: var(--sans);
+  font-size: 0.85em;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0 2px;
+  border-radius: 6px;
+}
+a.dt-cite:hover{ text-decoration: underline; }
+
+/* Hover box styling (the hidden reference cards you provided) */
+.dt-hover-box{
+  position: fixed;
+  z-index: 9999;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  padding: 12px 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+.dt-hover-box b{ color: var(--ink); }
+.dt-hover-box a{ color: var(--accent); }
+
+/* Glossary styling */
+.glossary{
+  margin-top: 10px;
+}
+.glossary dl{
+  margin: 0;
+}
+.glossary dt{
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 14px;
+}
+.glossary dd{
+  margin: 4px 0 0 0;
+  padding-left: 0;
+  font-family: var(--sans);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.glossary .term-line{
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Right-panel glossary (collapsible + scrollable) */
+.glossary-panel{
+  margin-top: 8px;
+  max-height: 68vh;         /* keeps the panel usable */
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.glossary-panel details{
+  border-top: 1px solid var(--rule);
+  padding: 8px 0;
+}
+
+.glossary-panel summary{
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 600;
+  list-style: none;
+  outline: none;
+}
+
+.glossary{}
+
+.glossary-panel .def{
+  margin: 6px 0 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.glossary-panel .term-line{
+  color: var(--ink);
+  font-weight: 600;
+}
+
+
+/* Copyright footer (centered) */
+.site-footer{
+  width: 100%;
+  border-top: 1px solid var(--rule);
+  margin: 54px auto 0;
+  padding: 20px 16px 36px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  background: #fff;
+  text-align: center;
+}
+
+.site-footer .footer-inner{
+  max-width: 1140px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.site-footer .footer-line{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap: 10px;
+}
+
+.site-footer .sep{
+  color: #bbb;
+  padding: 0 4px;
+}
+
+.site-footer a{
+  color: var(--accent);
+  text-decoration: none;
+}
+.site-footer a:hover{ text-decoration: underline; }
+
+
+
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="title-block">
+      <h1>AI‑Assisted Hemocytometer Counting Workflow</h1>
+      <p class="subtitle">Detection‑ vs. segmentation‑based approaches for faster, less biased cell counts in cardiomyocyte culture</p>
+
+      <div class="byline">
+        <div class="item">
+          <div>
+            <div class="label">Authors</div>
+            <div class="value">
+              <strong><a href="https://xinyue.me" target="_blank" rel="noopener">Xinyue Wang</a></strong>,
+              <a href="https://profiles.stanford.edu/prerna-giri?tab=bio" target="_blank" rel="noopener">Prerna Giri</a>,
+              <a href="https://profiles.stanford.edu/intranet/giovanni-fajardo-martino" target="_blank" rel="noopener">Giovanni Fajardo</a>,
+              <a href="https://profiles.stanford.edu/daniel-bernstein" target="_blank" rel="noopener">Daniel Bernstein</a>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div>
+            <div class="label">Affiliation</div>
+            <div class="value">Division of Cardiology, Department of Pediatrics, Stanford University School of Medicine, Stanford, CA 94305</div>
+          </div>
+        </div>
+        <div class="item">
+          <div>
+            <div class="label">Contact</div>
+            <div class="value">
+              <a href="mailto:wxinyue@ohs.stanford.edu">wxinyue@ohs.stanford.edu</a><br>
+              <span style="font-size:12px; color:var(--faint);">Updated September 2025</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <div class="content">
+      <article>
+
+        <p>
+          Counting cells sounds like the kind of task computers should have solved decades ago.
+          In practice, it’s one of those “simple” steps that quietly controls everything downstream:
+          how many cells you plate, how fast they grow, how strongly they respond to a drug,
+          and whether two experiments can be compared at all.
+        </p>
+
+        <p>
+          In our lab, we work with <strong>human induced pluripotent stem cells (hiPSC)</strong>
+          and cardiomyocytes—cells that are sensitive to culture conditions and density.
+          When you count cells on a hemocytometer, two careful people can still disagree by
+          around <strong>5–10%</strong>. That’s not because anyone is careless; it’s because
+          real samples are messy: cells overlap, debris looks cell‑like, focus drifts, and “is that one cell or two?”
+          becomes a surprisingly philosophical question.
+        </p>
+
+        <p>
+          This project explores a very practical question: can open‑source computer vision reduce that friction?
+          Specifically, can we take the same bright‑field hemocytometer images we already capture,
+          and use modern AI to produce fast, repeatable counts—without adding expensive consumables or specialized hardware?
+        </p>
+
+        <!-- FIGURE SLOT: add your overview figure here -->
+        <figure class="full-width" id="fig-overview">
+          <img src="files/workflow.png" alt="Workflow overview from hemocytometer image through model to QC" loading="lazy">
+          <figcaption>
+            Fig. 1 — Workflow overview: hemocytometer image → model inference → count aggregation → QC review.
+          </figcaption>
+        </figure>
+
+        <h2>Why hemocytometer counting is harder than it looks</h2>
+
+        <p>
+          A hemocytometer is basically graph paper for biology.
+          It’s a thick glass slide with a precisely etched grid and a known chamber depth.
+          If you load a cell suspension, the grid gives you a known volume—so “cells per square” becomes
+          “cells per milliliter.”
+        </p>
+
+        <p>
+          The method is elegant, but the human experience is not.
+          In a perfect world, each cell would be isolated, round, in focus, and well‑contrasted.
+          In the real world, you have:
+          (1) cells touching or overlapping,
+          (2) small clumps that should count as multiple cells,
+          (3) dead cells and fragments,
+          (4) bubbles, dust, and stain crystals,
+          and (5) different people drawing the line differently.
+          All of that introduces <strong>inter‑observer variance</strong>—variation that comes purely from who is counting.
+        </p>
+
+        <aside class="sidenote">
+          <strong>Inter‑observer variance</strong> just means two observers produce different numbers from the same sample.
+          In a publication, you might report this as a coefficient of variation (CV), which is “spread divided by average.”
+        </aside>
+
+        <p>
+          Commercial counters help, but they’re not magic.<a class="dt-cite" href="#dt-cite-hover-box-16">[17]</a>
+          Image‑based benchtop counters make choices about focus, size thresholds, and contrast.<a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a>
+          Flow cytometers make choices about gating—deciding which events are “cells” based on light scatter or fluorescence.<a class="dt-cite" href="#dt-cite-hover-box-17">[18]</a><a class="dt-cite" href="#dt-cite-hover-box-11">[12]</a>
+          These tools can be excellent, but they still need calibration and can still drift on tricky samples.<a class="dt-cite" href="#dt-cite-hover-box-9">[10]</a>
+          They also often introduce ongoing costs: slides, reagents, service contracts, and core‑facility time.<a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a><a class="dt-cite" href="#dt-cite-hover-box-16">[17]</a>
+        </p>
+
+        <p>
+          So the question becomes less “is there a perfect method?” and more
+          “what is the best trade‑off between accuracy, speed, and cost for routine lab work?”
+        </p>
+
+        <h2>Two computer‑vision mindsets: boxes vs. outlines</h2>
+
+        <p>
+          Modern computer vision usually solves problems in one of two ways.
+          The first is <strong>object detection</strong>, which answers: “where are the objects?”
+          The second is <strong>instance segmentation</strong>, which answers: “what is the exact shape of each object?”<a class="dt-cite" href="#dt-cite-hover-box-2">[3]</a>
+          Both can be used to count cells, but they behave differently.
+        </p>
+
+        <h3>Object detection (YOLOv8): “traffic‑camera logic”</h3>
+        <p>
+          YOLOv8 belongs to a family of models called “You Only Look Once.”<a class="dt-cite" href="#dt-cite-hover-box-0">[1]</a><a class="dt-cite" href="#dt-cite-hover-box-1">[2]</a>
+          You can think of it like a traffic camera system: it looks at a scene and draws boxes around things of interest.
+          In traffic enforcement, that “thing” might be a license plate. In our case, it’s a cell.
+          The model outputs a box (plus a confidence score), and counting becomes “how many boxes did it draw?”
+        </p>
+
+        <p>
+          This is powerful because boxes are quick to label and quick to compute.
+          But boxes don’t describe shape. If two cells touch, YOLO might draw one big box or two overlapping boxes.
+          It can still work well for counting, but it has less built‑in awareness of boundaries.
+        </p>
+
+        <h3>Instance segmentation (Cellpose‑SAM): “trace the cell boundary”</h3>
+        <p>
+          Cellpose takes a different approach: it aims to outline each individual cell.<a class="dt-cite" href="#dt-cite-hover-box-3">[4]</a>
+          If YOLO is “find objects,” Cellpose is “draw the silhouette.”
+          That’s extremely useful when cells touch—because the boundary is exactly what a human would use to decide
+          whether something is one cell or two.
+          Other cell‑centric segmenters like StarDist follow the same boundary‑aware philosophy and remain strong baselines.<a class="dt-cite" href="#dt-cite-hover-box-7">[8]</a>
+        </p>
+
+        <p>
+          In this project we used <strong>Cellpose‑SAM</strong>, which combines Cellpose with the “Segment Anything Model” (SAM).<a class="dt-cite" href="#dt-cite-hover-box-4">[5]</a><a class="dt-cite" href="#dt-cite-hover-box-5">[6]</a><a class="dt-cite" href="#dt-cite-hover-box-6">[7]</a>
+          SAM can be guided with simple prompts—like clicks or rough regions—to help the algorithm lock onto the right object.
+          In practice, this can reduce the time it takes to produce high‑quality masks, especially on tricky bright‑field images.
+        </p>
+
+        <!-- FIGURES: side-by-side comparison of detection boxes vs segmentation masks -->
+        <div class="figure-row" id="fig-concept">
+          <figure id="fig3-yolo-boxes">
+            <img src="files/yolo-box.png" alt="YOLOv8 bounding boxes on hemocytometer crop" loading="lazy">
+            <figcaption>
+              Fig. 2 — YOLOv8: object detection draws bounding boxes around each cell.
+            </figcaption>
+          </figure>
+          <figure id="fig4-cellpose-masks">
+            <img src="files/cellpose-seg-clumps.png" alt="Cellpose-SAM pixel-accurate masks on hemocytometer crop" loading="lazy">
+            <figcaption>
+              Fig. 3 — Cellpose‑SAM: instance segmentation produces pixel‑accurate outlines.
+            </figcaption>
+          </figure>
+        </div>
+
+        <h2>How we taught models to count (without reinventing AI)</h2>
+
+        <p>
+          A common misconception is that you need millions of images to use AI.
+          That’s true if you want to train a model from scratch.
+          But in many scientific settings, we do something more practical:
+          <strong>fine‑tuning</strong>—starting from a model that already learned general visual features,
+          then adapting it to our microscope and our cells.
+        </p>
+
+        <aside class="sidenote">
+          <strong>Fine‑tuning</strong> is like teaching a skilled generalist a new dialect.
+          The model already understands edges, textures, and contrast;
+          it just needs examples of what “a cardiomyocyte in our hemocytometer images” looks like.
+        </aside>
+
+        <p>
+          For YOLOv8, we trained on two sources:
+          <strong>210 public hemocytometer images</strong> plus about <strong>300 in‑house bright‑field fields</strong>.
+          Each in‑house image was labeled with bounding boxes—one per cell.
+          For Cellpose‑SAM, we used the same in‑house images, but instead of boxes we corrected the model’s proposed
+          cell outlines (“masks”). Public label‑free datasets such as LIVECell are also useful for pretraining and transfer to new microscopes.<a class="dt-cite" href="#dt-cite-hover-box-8">[9]</a>
+        </p>
+
+        <p>
+          Training and tuning ran on Stanford’s <a href="https://www.sherlock.stanford.edu/" target="_blank" rel="noopener">Sherlock cluster</a> with a GPU.
+          If you’re not familiar with GPUs: they’re specialized hardware that can do many small math operations in parallel,
+          which makes neural networks run quickly. Think of it as the difference between one person doing calculations on a
+          whiteboard vs. a whole room of people doing them at once.
+        </p>
+
+        <p>
+          After either model makes predictions, we apply a small but important step:
+          <strong>post‑processing</strong>.
+          This is not “cheating”—it’s the same kind of rule a human uses unconsciously.
+          In our case, we filter predictions by size, keeping only objects that fall within a plausible single‑cell area range.
+          That helps reject tiny debris and overly large clumps.
+        </p>
+
+        <h2>How we judged success: accuracy, bias, and speed</h2>
+
+        <p>
+          Counting is a measurement problem, so we borrowed measurement‑science language.
+          We evaluated models against a dual‑human reference and summarized performance with four concepts:
+        </p>
+
+
+        <p>
+          <strong>MAPE (mean absolute percent error)</strong> answers “how far off, in percent, are the counts?”
+          It’s intuitive across sparse and dense images.
+          <strong>Bias</strong> answers “does the method systematically over‑count or under‑count?”
+          <strong>Throughput</strong> answers “how many fields per minute can we process?”
+          And <strong>hands‑on time</strong> answers “how much human time does it take in practice?”
+          These are standard method‑comparison axes and align with dilution‑series style evaluations recommended for cell‑counting processes.<a class="dt-cite" href="#dt-cite-hover-box-10">[11]</a>
+        </p>
+
+        <aside class="sidenote">
+          MAPE and bias can disagree in a useful way.
+          A method can have low percent error but still be consistently off by a few cells.
+          That’s why we report both: one captures relative error, the other captures systematic drift.<a class="dt-cite" href="#dt-cite-hover-box-12">[13]</a>
+        </aside>
+
+        <p>
+          Because this was a summer‑scope project, we could not also run a full, in‑house benchmarking campaign
+          for every commercial instrument.
+          To contextualize our results, we used two widely cited evaluations from the literature:
+          one for bead‑based flow cytometry counting and one for a commercial automated counter.<a class="dt-cite" href="#dt-cite-hover-box-14">[15]</a><a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a>
+          This lets readers compare “what we achieved with open tools” against “what others observed with common instruments.”
+        </p>
+
+        <h2>What we saw</h2>
+
+        <p>
+          The short story is: <strong>Cellpose‑SAM produced the most accurate counts</strong>, with YOLOv8 close behind.
+          In practice, YOLOv8 was dramatically faster and required the least hands‑on time,
+          making it ideal for routine daily counting.
+          Cellpose‑SAM was slower, but it handled tight clusters more gracefully—exactly where humans tend to disagree most.
+        </p>
+
+
+        <div class="figure-row">
+          <!-- FIGURE SLOT: insert your actual YOLO overlay here -->
+          <figure id="fig1-yolo">
+            <img src="files/yolo-overlay.png" alt="YOLOv8 detection overlay on hemocytometer field" loading="lazy">
+            <figcaption>
+              Fig. 4 — YOLOv8 overlay. Bounding boxes mark each detected cell. Boxes are fast to compute and fast to count.
+            </figcaption>
+          </figure>
+
+          <!-- FIGURE SLOT: insert your actual Cellpose overlay here -->
+          <figure id="fig2-cellpose">
+            <img src="files/cellpose-overlay.png" alt="Cellpose-SAM mask overlay on hemocytometer field" loading="lazy">
+            <figcaption>
+              Fig. 5 — Cellpose‑SAM overlay. Pixel‑level masks trace cell shapes, helping separate touching neighbors.
+            </figcaption>
+          </figure>
+        </div>
+
+        <p>
+          For readers who like numbers, here’s the compact comparison table.
+          (The flow cytometer and automated counter rows are drawn from published benchmarks due to time and resource limits in this study.)<a class="dt-cite" href="#dt-cite-hover-box-14">[15]</a><a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a>
+        </p>
+
+        <table aria-label="Metric comparison table">
+          <thead>
+            <tr>
+              <th>Metric (mean ± SD)</th>
+              <th>YOLOv8</th>
+              <th>Cellpose‑SAM</th>
+              <th>Human</th>
+              <th>Flow Cytometer</th>
+              <th>Countess / TC20 (range)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MAPE vs. 2‑human ground truth</td>
+              <td>3.1 ± 1.4%</td>
+              <td>1.0 ± 0.8%</td>
+              <td>0% (ref)</td>
+              <td>5.3 ± 4.0%<a class="dt-cite" href="#dt-cite-hover-box-19">[20]</a></td>
+              <td>0.8 ± 0.6%<a class="dt-cite" href="#dt-cite-hover-box-9">[10]</a><a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a><a class="dt-cite" href="#dt-cite-hover-box-16">[17]</a></td>
+            </tr>
+            <tr>
+              <td>Bias (cells/field)</td>
+              <td>+0.20 ± 0.95</td>
+              <td>−0.06 ± 0.50</td>
+              <td>—</td>
+              <td>−2 to +3 cells<a class="dt-cite" href="#dt-cite-hover-box-19">[20]</a></td>
+              <td>+5 to +6 cells<a class="dt-cite" href="#dt-cite-hover-box-9">[10]</a><a class="dt-cite" href="#dt-cite-hover-box-16">[17]</a></td>
+            </tr>
+            <tr>
+              <td>Throughput (fields/min)</td>
+              <td>480 (GPU)</td>
+              <td>50 (GPU)</td>
+              <td>1.4</td>
+              <td>10<a class="dt-cite" href="#dt-cite-hover-box-14">[15]</a></td>
+              <td>15<a class="dt-cite" href="#dt-cite-hover-box-15">[16]</a><a class="dt-cite" href="#dt-cite-hover-box-16">[17]</a></td>
+            </tr>
+            <tr>
+              <td>Hands‑on time / day</td>
+              <td>&lt; 5 min</td>
+              <td>~10 min</td>
+              <td>~30 min</td>
+              <td>~1 h</td>
+              <td>~30 min</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="table-note">
+          Interpretation tip: YOLOv8 is the speed‑to‑utility workhorse; Cellpose‑SAM is the accuracy and clump‑separation specialist.
+          “Bias” reflects systematic over‑ or under‑counting (signed), which can matter even when percent error looks small.
+        </p>
+
+        <h2>So… which should a lab use?</h2>
+
+        <p>
+          If your main goal is routine daily counts—“how many cells do I have?”—a detector like YOLOv8 is hard to beat.
+          It’s fast enough to feel instantaneous, and with a modest amount of labeling it can become highly consistent.
+          If your goal includes separating touching cells, or you also care about morphology (size, shape, elongation),
+          segmentation pays off. That’s where Cellpose‑SAM shines: it turns “counting” into “counting well‑defined objects.” <a class="dt-cite" href="#dt-cite-hover-box-3">[4]</a><a class="dt-cite" href="#dt-cite-hover-box-4">[5]</a>
+        </p>
+
+        <p>
+          The broader lesson is that “AI for the lab” doesn’t have to mean a black box.
+          A practical workflow can be:
+          start with a public dataset,
+          add a few hundred images from your own microscope,
+          fine‑tune,
+          and then add one or two sanity‑check rules (like a size filter) that match biological reality.
+          The result can be both fast and trustworthy—because you can see and audit what the model is doing.
+        </p>
+
+        <!-- FIGURE: common failure modes panel -->
+        <figure id="fig-failures">
+          <div class="thumb-grid">
+            <figure>
+              <img src="files/shuffle/bubble-1.png" alt="Bubble artifacts mistaken for cells">
+              <figcaption>Bubble artifact flagged as a cell (easy to filter by size/shape).</figcaption>
+            </figure>
+            <figure>
+              <img src="files/shuffle/fiber-1.png" alt="Cleaning fiber across grid">
+              <figcaption>Fiber from cleaning step; detectors may count edges unless size-gated.</figcaption>
+            </figure>
+            <figure>
+              <img src="files/shuffle/fiber-3.png" alt="Long fiber streaking across field">
+              <figcaption>Long streaking fiber—illustrates need for aspect-ratio or length filters.</figcaption>
+            </figure>
+            <figure>
+              <img src="files/shuffle/clump-1.png" alt="Tight clump of cells">
+              <figcaption>Cell clump: YOLO tends to merge, Cellpose can split with masks.</figcaption>
+            </figure>
+            <figure>
+              <img src="files/shuffle/contaminated-1.png" alt="Contaminated debris field">
+              <figcaption>Debris field: background cleanup + confidence thresholds matter.</figcaption>
+            </figure>
+            <figure>
+              <img src="files/shuffle/unclear-view-1.png" alt="Out-of-focus hemocytometer grid">
+              <figcaption>Out-of-focus field: both models degrade; QC should flag for reacquisition.</figcaption>
+            </figure>
+          </div>
+          <figcaption>
+            Fig. 6 — Common failure modes: bubbles, fibers, clumps, debris, and focus issues; rule-based filters and QC screens help suppress these errors.
+          </figcaption>
+        </figure>
+
+        <h2>Limitations</h2>
+
+        <p>
+          Two limitations are worth being explicit about.
+          First, our in‑house training set is still relatively small (~300 bright‑field images),
+          and it comes from a narrow range of microscopes and settings.
+          Models may underperform if imaging conditions change substantially.
+          Second, our ground truth is based on human counting.
+          Humans are the best available reference in most labs, but they are not perfect; any misclassification propagates into our metrics.<a class="dt-cite" href="#dt-cite-hover-box-18">[19]</a>
+        </p>
+
+        <h2>Future directions</h2>
+
+        <p>
+          The next step is scale and robustness: expand to more than 1,000 images spanning magnifications,
+          illumination differences, and staining conditions, so the models generalize across microscopes.
+          We also want to add a viability component using Trypan Blue, turning the output into “live vs dead counts.”<a class="dt-cite" href="#dt-cite-hover-box-13">[14]</a>
+          Finally, we plan to wrap the workflow in a simple Streamlit web app so anyone can drag‑and‑drop a hemocytometer photo
+          and get a count, an overlay, and a quality‑control flag in seconds.
+        </p>
+
+        <h2>Conclusion</h2>
+
+        <p>
+          Bright‑field hemocytometer images can be quantified reproducibly with lightweight, open-source vision models.
+          In this study, YOLOv8 provided the highest throughput and acceptable percent error for routine cell enumerations,
+          whereas Cellpose‑SAM minimized boundary ambiguity in confluent fields, improving per‑cell delineation.
+          Combining modest lab‑specific fine‑tuning with size‑based post‑processing yields counts that are both auditable
+          and comparable to commercial instruments, offering a transparent alternative for day‑to‑day cell biology.
+        </p>
+
+<section class="footnotes" id="references">
+  <h3 style="font-family:var(--sans); font-size:14px; margin: 0 0 8px;">References</h3>
+  <ol>
+    <li id="ref-1">
+      
+      Redmon J, Divvala S, Girshick R, Farhadi A. <b>You Only Look Once: Unified, Real-Time Object Detection</b>. CVPR, 2016.
+      <a href="https://openaccess.thecvf.com/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">[PDF]</a>
+      <a href="https://doi.org/10.1109/CVPR.2016.91">DOI</a>
+    </li>
+
+    <li id="ref-2">
+      
+      Ultralytics. <b>YOLOv8 Documentation</b>.
+      <a href="https://docs.ultralytics.com/models/yolov8/">[HTML]</a>
+      <a href="https://github.com/ultralytics/ultralytics">[GitHub]</a>
+    </li>
+
+    <li id="ref-3">
+      
+      Ronneberger O, Fischer P, Brox T. <b>U-Net: Convolutional Networks for Biomedical Image Segmentation</b>. MICCAI, 2015.
+      <a href="https://arxiv.org/pdf/1505.04597.pdf">[PDF]</a>
+      <a href="https://doi.org/10.1007/978-3-319-24574-4_28">DOI</a>
+    </li>
+
+    <li id="ref-4">
+      
+      Stringer C, Wang T, Michaelos M, Pachitariu M. <b>Cellpose: a generalist algorithm for cellular segmentation</b>. bioRxiv, 2020.
+      <a href="https://www.biorxiv.org/content/10.1101/2020.02.02.931238v2.full.pdf">[PDF]</a>
+      <a href="https://doi.org/10.1101/2020.02.02.931238">DOI</a>
+      <a href="https://github.com/MouseLand/cellpose">[Code]</a>
+    </li>
+
+    <li id="ref-5">
+      
+      Pachitariu M, Rariden M, Stringer C. <b>Cellpose-SAM: superhuman generalization for cellular segmentation</b>. bioRxiv, 2025.
+      <a href="https://www.biorxiv.org/content/10.1101/2025.04.28.651001v1.full.pdf">[PDF]</a>
+      <a href="https://doi.org/10.1101/2025.04.28.651001">DOI</a>
+    </li>
+
+    <li id="ref-6">
+      
+      Kirillov A, Mintun E, Ravi N, Mao H, Rolland C, Gustafson L, et al. <b>Segment Anything</b>. arXiv:2304.02643, 2023.
+      <a href="https://arxiv.org/pdf/2304.02643.pdf">[PDF]</a>
+      <a href="https://arxiv.org/abs/2304.02643">[arXiv]</a>
+    </li>
+
+    <li id="ref-7">
+      
+      Archit A, Nierhaus R, Bonora R, et al. <b>Segment Anything for Microscopy</b>. Nature Methods, 2025.
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11892542/">[HTML]</a>
+      <a href="https://doi.org/10.1038/s41592-024-02580-4">DOI</a>
+    </li>
+
+    <li id="ref-8">
+      
+      Schmidt U, Weigert M, Broaddus C, Myers G. <b>Cell Detection with Star-convex Polygons (StarDist)</b>. MICCAI, 2018.
+      <a href="https://arxiv.org/pdf/1806.03535.pdf">[PDF]</a>
+      <a href="https://arxiv.org/abs/1806.03535">[arXiv]</a>
+    </li>
+
+    <li id="ref-9">
+      
+      Edlund C, Jackson D, Khalid C, et al. <b>LIVECell—A large-scale dataset for label-free live cell segmentation</b>. Nature Methods, 2021.
+      <a href="https://sartorius-research.github.io/LIVECell/">[HTML]</a>
+      <a href="https://doi.org/10.1038/s41592-021-01249-6">DOI</a>
+    </li>
+
+    <li id="ref-10">
+      
+      Cadena-Herrera D, Esparza-De Lara JE, Ramírez-Ibáñez ND, et al. <b>Validation of three viable-cell counting methods: Manual, semi-automated, and automated</b>.
+      Biotechnology Reports, 2015.
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5466062/">[HTML]</a>
+      <a href="https://doi.org/10.1016/j.btre.2015.04.004">DOI</a>
+    </li>
+
+    <li id="ref-11">
+      
+      Sarkar S, Lund SP, Vyzasatya R, Vanguri P, Elliott JT, Plant AL, Lin-Gibson S.
+      <b>Evaluating the quality of a cell counting measurement process via a dilution series experimental design</b>. Cytotherapy, 2017.
+      <a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=921053">[PDF]</a>
+      <a href="https://doi.org/10.1016/j.jcyt.2017.08.014">DOI</a>
+    </li>
+
+    <li id="ref-12">
+      
+      Vembadi B, Menachery A, Qasaimeh SA. <b>Cell Cytometry: Review and Perspective on Biotechnological Advances</b>. Frontiers in Bioengineering and Biotechnology, 2019.
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6591278/">[HTML]</a>
+    </li>
+
+    <li id="ref-13">
+      
+      Bland JM, Altman DG. <b>Statistical methods for assessing agreement between two methods of clinical measurement</b>. The Lancet, 1986.
+      <a href="https://pubmed.ncbi.nlm.nih.gov/2868172/">[HTML]</a>
+      <a href="https://doi.org/10.1016/S0140-6736(86)90837-8">DOI</a>
+    </li>
+
+    <li id="ref-14">
+      
+      Strober W. <b>Trypan Blue Exclusion Test of Cell Viability</b>. Current Protocols in Immunology, 2015.
+      <a href="https://pubmed.ncbi.nlm.nih.gov/26529666/">[HTML]</a>
+      <a href="https://doi.org/10.1002/0471142735.ima03bs111">DOI</a>
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6716531/">[PMC]</a>
+    </li>
+
+    <li id="ref-15">
+      
+      Nicholson JK, Levett PN, et al. <b>Absolute Count of CD4 Lymphocytes with TruCount Tubes</b>. Clinical and Diagnostic Laboratory Immunology, 1997.
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC170424/">[HTML]</a>
+      <a href="https://doi.org/10.1128/cdli.4.3.309-313.1997">DOI</a>
+    </li>
+
+    <li id="ref-16">
+      
+      Hsiung F, McCollum T, Hefner E, Rubio T. <b>Comparison of count reproducibility, accuracy, and time to results between a hemocytometer and TC20™ Automated Cell Counter</b>.
+      Bio-Rad Technical Bulletin 6003, 2013.
+      <a href="https://www.bio-rad.com/webroot/web/pdf/lsr/literature/Bulletin_6003.pdf">[PDF]</a>
+    </li>
+
+    <li id="ref-17">
+      
+      Thermo Fisher Scientific (Invitrogen). <b>Countess® Automated Cell Counter and Hemocytometer Comparison</b>.
+      Application note.
+      <a href="https://assets.fishersci.com/TFS-Assets/LSG/Application-Notes/CO1001050-Countess-Cell-Counter-and-Hemocytometer-Comparison.pdf">[PDF]</a>
+    </li>
+
+    <li id="ref-18">
+      
+      Cossarizza A, Chang H-D, Radbruch A, et al. <b>Guidelines for the use of flow cytometry and cell sorting in immunological studies</b>. 2017.
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9165548/">[HTML]</a>
+    </li>
+
+    <li id="ref-19">
+      
+      Piccinini F, Tesei A, et al. <b>Cell Counting and Viability Assessment of 2D and 3D Cell Cultures: Expected Reliability and Practical Issues</b>.
+      Journal of Biological Engineering, 2017.
+      <a href="https://link.springer.com/article/10.1186/s12575-017-0056-3">[HTML]</a>
+      <a href="https://doi.org/10.1186/s12575-017-0056-3">DOI</a>
+    </li>
+
+    <li id="ref-20">
+      
+      Collins CE, Young NA, Flaherty DK, Airey DC, Kaas JH. <b>A rapid and reliable method of counting neurons and other cells in brain tissue: a comparison of flow cytometry and manual counting methods</b>.
+      Frontiers in Neuroanatomy, 2010.
+      <a href="https://public-pages-files-2025.frontiersin.org/journals/neuroanatomy/articles/10.3389/neuro.05.005.2010/pdf">[PDF]</a>
+      <a href="https://doi.org/10.3389/neuro.05.005.2010">DOI</a>
+    </li>
+  </ol>
+</section>
+
+
+        <section class="footnotes" id="ack">
+          <h3 style="font-family:var(--sans); font-size:14px; margin: 0 0 8px;">Acknowledgments</h3>
+          <p style="margin:0;">
+            I am very grateful to Dora and Lucas for their unwavering encouragement and steady support.
+            I’m also grateful to Allison and the Office of Pediatric Education for fostering such an enriching research environment.
+            Thank you to Sophia and Jennifer for their guidance and thoughtful feedback throughout the project, and to Anjali for her expertise in cell culture, and for being both a mentor and a friend.
+            This work was made possible by the generous support of the Stanford Medicine Office of Pediatric Education and Stanford Research Computing.
+          </p>
+        </section>
+
+        <section class="footnotes" id="license">
+          <h3 style="font-family:var(--sans); font-size:14px; margin: 12px 0 8px;">License</h3>
+          <p style="margin:0;">
+            Licensed under CC BY 4.0. You are free to: <strong>Share</strong> — copy and redistribute the material in any medium or format for any purpose, even commercially. <strong>Adapt</strong> — remix, transform, and build upon the material for any purpose, even commercially. The licensor cannot revoke these freedoms as long as you follow the license terms. Under the following terms: <strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. <strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+          </p>
+        </section>
+
+      </article>
+
+      <div class="sidenotes-col">
+        <div class="box">
+         <h4>Glossary</h4>
+<div class="glossary-panel" id="glossary">
+
+  <details>
+    <summary>AI — Artificial intelligence</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Computer programs that learn patterns from data to make decisions instead of following only hand-written rules.</div>
+  </details>
+
+  <details>
+    <summary>hiPSC — human induced pluripotent stem cell(s)</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Adult cells reprogrammed to a stem-cell state so they can become many cell types, like heart cells, in the lab.</div>
+  </details>
+
+  <details>
+    <summary>YOLOv8 — “You Only Look Once”, version 8</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A fast algorithm that scans an image once and draws boxes around objects—in our case, cells.</div>
+  </details>
+
+  <details>
+    <summary>SAM — Segment Anything Model</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A general vision tool that can outline almost any object in an image after you give it a hint, like a click or a box.</div>
+  </details>
+
+  <details>
+    <summary>Cellpose-SAM — Cellpose segmentation model assisted by SAM</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A biology-focused tool that traces each cell’s outline, made easier to guide and more robust with SAM prompts.</div>
+  </details>
+
+  <details>
+    <summary>MAPE — mean absolute percent error</summary>
+    <div class="def"><span class="term-line">Meaning:</span> The average percent difference between what a method counted and what the human reference counted (smaller is better).</div>
+  </details>
+
+  <details>
+    <summary>F1 — F1 score</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A single score that balances precision (“how many detected cells were real”) and recall (“how many real cells were found”).</div>
+  </details>
+
+  <details>
+    <summary>GPU — graphics processing unit</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Hardware that accelerates deep-learning training and inference by doing many calculations in parallel.</div>
+  </details>
+
+  <details>
+    <summary>BF — bright-field microscopy</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Standard transmitted-light images where cells appear gray on a light background—no fluorescence required.</div>
+  </details>
+
+  <details>
+    <summary>QC — quality control</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Routine checks to confirm instruments or models are stable and performing as expected.</div>
+  </details>
+
+  <details>
+    <summary>SD — standard deviation</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A measure of how spread out values are around the mean; larger SD means more variability.</div>
+  </details>
+
+  <details>
+    <summary>CV — coefficient of variation</summary>
+    <div class="def"><span class="term-line">Meaning:</span> SD divided by the mean (as a percent), which makes variability comparable across different scales.</div>
+  </details>
+
+  <details>
+    <summary>FSC — forward scatter</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A flow-cytometry signal that roughly correlates with particle/cell size.</div>
+  </details>
+
+  <details>
+    <summary>SSC — side scatter</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A flow-cytometry signal that reflects cell internal complexity or granularity.</div>
+  </details>
+
+  <details>
+    <summary>BD — Becton Dickinson</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A major manufacturer of flow cytometers commonly used in core facilities.</div>
+  </details>
+
+  <details>
+    <summary>TC20 — Bio-Rad TC20 automated cell counter</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A benchtop counter that images a chamber slide and outputs a cell count using built-in rules.</div>
+  </details>
+
+  <details>
+    <summary>ref — reference (manual ground truth)</summary>
+    <div class="def"><span class="term-line">Meaning:</span> The “gold standard” human counts used to compare all other methods.</div>
+  </details>
+
+  <details>
+    <summary>px² — pixels squared</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Image-space area used for size filtering (too small = debris, too big = clump).</div>
+  </details>
+
+  <details>
+    <summary>mm² — square millimeters</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Real-world area on the hemocytometer grid; useful when converting counts to concentrations.</div>
+  </details>
+
+  <details>
+    <summary>µL — microliter</summary>
+    <div class="def"><span class="term-line">Meaning:</span> One millionth of a liter; typical volumes loaded into chamber slides or counters.</div>
+  </details>
+
+  <details>
+    <summary>µm — micrometer</summary>
+    <div class="def"><span class="term-line">Meaning:</span> One millionth of a meter; common size scale for cells and microscope measurements.</div>
+  </details>
+
+  <details>
+    <summary>min⁻¹ — per minute</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A rate unit (e.g., “fields per minute” for throughput).</div>
+  </details>
+
+  <details>
+    <summary>s/field — seconds per field</summary>
+    <div class="def"><span class="term-line">Meaning:</span> How long it takes to analyze one microscope image field.</div>
+  </details>
+
+  <details>
+    <summary>cls_pw — class positive weight</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A YOLO training setting controlling how strongly the model is encouraged to predict “cell”; lowering it can reduce false positives.</div>
+  </details>
+
+  <details>
+    <summary>GUI — graphical user interface</summary>
+    <div class="def"><span class="term-line">Meaning:</span> A point-and-click window (instead of command lines) for running software and inspecting outputs.</div>
+  </details>
+
+  <details>
+    <summary>MAPE vs. 2-human ground truth</summary>
+    <div class="def"><span class="term-line">Meaning:</span> MAPE computed against the average/consensus of two independent human counters; summarizes count error in percent.</div>
+  </details>
+
+  <details>
+    <summary>Bias (cells/field)</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Average (method − human) per image field; negative means under-counting, positive means over-counting.</div>
+  </details>
+
+  <details>
+    <summary>Throughput (fields/min)</summary>
+    <div class="def"><span class="term-line">Meaning:</span> How many microscope image fields a method can analyze each minute.</div>
+  </details>
+
+  <details>
+    <summary>Inference post-processing</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Simple cleanup rules after predictions (e.g., size filters) to remove debris or merged objects.</div>
+  </details>
+
+  <details>
+    <summary>YOLO boxes</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Rectangles around predicted cells—fast for training and fast for counting.</div>
+  </details>
+
+  <details>
+    <summary>Cellpose masks &amp; SAM prompts</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Masks are pixel-level outlines; prompts are quick hints (clicks/regions) that help SAM/Cellpose identify correct objects.</div>
+  </details>
+
+  <details>
+    <summary>Bland–Altman bias</summary>
+    <div class="def"><span class="term-line">Meaning:</span> The average difference between two measurement methods across samples; often paired with limits of agreement.</div>
+  </details>
+
+  <details>
+    <summary>Reference beads</summary>
+    <div class="def"><span class="term-line">Meaning:</span> Calibration standards of known size/concentration used to verify counting accuracy and stability (flow cytometers and some counters).</div>
+  </details>
+
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Distill-style hover citation boxes -->
+<div id="cite-hover-boxes-container">
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-0">
+    <b>You Only Look Once: Unified, Real-Time Object Detection</b>  <a href="https://openaccess.thecvf.com/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf">[PDF]</a><br>
+    J. Redmon, S. Divvala, R. Girshick, A. Farhadi.<br>
+    IEEE Conference on Computer Vision and Pattern Recognition (CVPR). 2016.<br>
+    <a href="https://doi.org/10.1109/CVPR.2016.91" style="text-decoration:inherit;">DOI: 10.1109/CVPR.2016.91</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-1">
+    <b>Ultralytics YOLOv8 Documentation</b>  <a href="https://docs.ultralytics.com/models/yolov8/">[HTML]</a><br>
+    Ultralytics.<br>
+    Software documentation (object detection / segmentation). Updated continuously.<br>
+    <a href="https://github.com/ultralytics/ultralytics" style="text-decoration:inherit;">GitHub: ultralytics/ultralytics</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-2">
+    <b>U-Net: Convolutional Networks for Biomedical Image Segmentation</b>  <a href="https://arxiv.org/pdf/1505.04597.pdf">[PDF]</a><br>
+    O. Ronneberger, P. Fischer, T. Brox.<br>
+    MICCAI. 2015.<br>
+    <a href="https://doi.org/10.1007/978-3-319-24574-4_28" style="text-decoration:inherit;">DOI: 10.1007/978-3-319-24574-4_28</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-3">
+    <b>Cellpose: a generalist algorithm for cellular segmentation</b>  <a href="https://www.biorxiv.org/content/10.1101/2020.02.02.931238v2.full.pdf">[PDF]</a><br>
+    C. Stringer, T. Wang, M. Michaelos, M. Pachitariu.<br>
+    bioRxiv preprint. 2020.<br>
+    <a href="https://doi.org/10.1101/2020.02.02.931238" style="text-decoration:inherit;">DOI: 10.1101/2020.02.02.931238</a><br>
+    <a href="https://github.com/MouseLand/cellpose" style="text-decoration:inherit;">Code: MouseLand/cellpose</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-4">
+    <b>Cellpose-SAM: superhuman generalization for cellular segmentation</b>  <a href="https://www.biorxiv.org/content/10.1101/2025.04.28.651001v1.full.pdf">[PDF]</a><br>
+    M. Pachitariu, M. Rariden, C. Stringer.<br>
+    bioRxiv preprint. 2025.<br>
+    <a href="https://doi.org/10.1101/2025.04.28.651001" style="text-decoration:inherit;">DOI: 10.1101/2025.04.28.651001</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-5">
+    <b>Segment Anything</b>  <a href="https://arxiv.org/pdf/2304.02643.pdf">[PDF]</a><br>
+    A. Kirillov, E. Mintun, N. Ravi, H. Mao, C. Rolland, L. Gustafson, et al.<br>
+    arXiv preprint arXiv:2304.02643. 2023.<br>
+    <a href="https://arxiv.org/abs/2304.02643" style="text-decoration:inherit;">arXiv:2304.02643</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-6">
+    <b>Segment Anything for Microscopy</b>  <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11892542/">[HTML]</a><br>
+    A. Archit, R. Nierhaus, R. Bonora, et al.<br>
+    Nature Methods. 2025.<br>
+    <a href="https://doi.org/10.1038/s41592-024-02580-4" style="text-decoration:inherit;">DOI: 10.1038/s41592-024-02580-4</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-7">
+    <b>Cell Detection with Star-convex Polygons (StarDist)</b>  <a href="https://arxiv.org/pdf/1806.03535.pdf">[PDF]</a><br>
+    U. Schmidt, M. Weigert, C. Broaddus, G. Myers.<br>
+    MICCAI. 2018.<br>
+    <a href="https://arxiv.org/abs/1806.03535" style="text-decoration:inherit;">arXiv:1806.03535</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-8">
+    <b>LIVECell—A large-scale dataset for label-free live cell segmentation</b>  <a href="https://sartorius-research.github.io/LIVECell/">[HTML]</a><br>
+    C. Edlund, D. Jackson, C. Khalid, et al.<br>
+    Nature Methods. 2021.<br>
+    <a href="https://doi.org/10.1038/s41592-021-01249-6" style="text-decoration:inherit;">DOI: 10.1038/s41592-021-01249-6</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-9">
+    <b>Validation of three viable-cell counting methods: Manual, semi-automated, and automated</b>  <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5466062/">[HTML]</a><br>
+    M. Cadena-Herrera, M. Esparza-De Lara, N. Ramírez-Ibañez, et al.<br>
+    Biotechnology Reports. 2015.
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-10">
+    <b>Evaluating the quality of a cell counting measurement process via a dilution series experimental design</b>  <a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=921053">[PDF]</a><br>
+    S. Sarkar, S. P. Lund, R. Vyzasatya, P. Vanguri, J. T. Elliott, A. L. Plant, S. Lin-Gibson.<br>
+    Cytotherapy. 2017.<br>
+    <a href="https://doi.org/10.1016/j.jcyt.2017.08.014" style="text-decoration:inherit;">DOI: 10.1016/j.jcyt.2017.08.014</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-11">
+    <b>Cell Cytometry: Review and Perspective on Biotechnological Advances</b>  <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6591278/">[HTML]</a><br>
+    B. Vembadi, A. Menachery, S. A. Qasaimeh.<br>
+    Frontiers in Bioengineering and Biotechnology. 2019.
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-12">
+    <b>Statistical methods for assessing agreement between two methods of clinical measurement</b>  <a href="https://pubmed.ncbi.nlm.nih.gov/2868172/">[HTML]</a><br>
+    J. M. Bland, D. G. Altman.<br>
+    The Lancet. 1986.<br>
+    <a href="https://doi.org/10.1016/S0140-6736(86)90837-8" style="text-decoration:inherit;">DOI: 10.1016/S0140-6736(86)90837-8</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-13">
+    <b>Trypan Blue Exclusion Test of Cell Viability</b>  <a href="https://pubmed.ncbi.nlm.nih.gov/26529666/">[HTML]</a><br>
+    W. Strober.<br>
+    Current Protocols in Immunology. 2015.<br>
+    <a href="https://doi.org/10.1002/0471142735.ima03bs111" style="text-decoration:inherit;">DOI: 10.1002/0471142735.ima03bs111</a><br>
+    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6716531/" style="text-decoration:inherit;">PMC full text</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-14">
+    <b>Absolute Count of CD4 Lymphocytes with TruCount Tubes</b>  <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC170424/">[HTML]</a><br>
+    J. K. Nicholson, P. N. Levett, et al.<br>
+    Clinical and Diagnostic Laboratory Immunology. 1997.<br>
+    <a href="https://doi.org/10.1128/cdli.4.3.309-313.1997" style="text-decoration:inherit;">DOI: 10.1128/cdli.4.3.309-313.1997</a>
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-15">
+    <b>Comparison of count reproducibility, accuracy, and time to results between a hemocytometer and TC20™ Automated Cell Counter</b>  <a href="https://www.bio-rad.com/webroot/web/pdf/lsr/literature/Bulletin_6003.pdf">[PDF]</a><br>
+    F. Hsiung, T. McCollum, E. Hefner, T. Rubio.<br>
+    Bio-Rad technical bulletin (Bulletin 6003). 2013.
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-16">
+    <b>Countess® Automated Cell Counter and Hemocytometer Comparison</b>  <a href="https://assets.fishersci.com/TFS-Assets/LSG/Application-Notes/CO1001050-Countess-Cell-Counter-and-Hemocytometer-Comparison.pdf">[PDF]</a><br>
+    Thermo Fisher Scientific (Invitrogen).<br>
+    Application note / method comparison. (Date varies by revision.)
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-17">
+    <b>Guidelines for the use of flow cytometry and cell sorting in immunological studies</b>  <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9165548/">[HTML]</a><br>
+    A. Cossarizza, H.-D. Chang, A. Radbruch, et al.<br>
+    (MIFlowCyt / good practice guidance; includes QC concepts relevant to counting). 2017.
+  </div>
+
+  <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-18">
+    <b>Cell Counting and Viability Assessment of 2D and 3D Cell Cultures: Expected Reliability and Practical Issues</b>  <a href="https://link.springer.com/article/10.1186/s12575-017-0056-3">[HTML]</a><br>
+    F. Piccinini, A. Tesei, et al.<br>
+    Journal of Biological Engineering. 2017.<br>
+    <a href="https://doi.org/10.1186/s12575-017-0056-3" style="text-decoration:inherit;">DOI: 10.1186/s12575-017-0056-3</a>
+    </div>
+    
+    <div style="display:none" class="dt-hover-box" id="dt-cite-hover-box-19">
+  <b>A rapid and reliable method of counting neurons and other cells in brain tissue: a comparison of flow cytometry and manual counting methods</b>
+   <a href="https://public-pages-files-2025.frontiersin.org/journals/neuroanatomy/articles/10.3389/neuro.05.005.2010/pdf">[PDF]</a><br>
+  C. E. Collins, N. A. Young, D. K. Flaherty, D. C. Airey, J. H. Kaas.<br>
+  Frontiers in Neuroanatomy. 2010.<br>
+  <a href="https://doi.org/10.3389/neuro.05.005.2010" style="text-decoration:inherit;">DOI: 10.3389/neuro.05.005.2010</a>
+</div>
+</div>
+ 
+
+<script>
+(function(){
+  // Find all citation links
+  const cites = Array.from(document.querySelectorAll('a.dt-cite'));
+  const container = document.getElementById('cite-hover-boxes-container');
+  if (!container || cites.length === 0) return;
+
+  let activeBox = null;
+
+  function showBox(box, x, y){
+    box.style.display = 'block';
+    // keep within viewport
+    const pad = 12;
+    const rect = box.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let left = x + 14;
+    let top  = y + 14;
+
+    if (left + rect.width + pad > vw) left = vw - rect.width - pad;
+    if (top + rect.height + pad > vh) top = vh - rect.height - pad;
+    if (left < pad) left = pad;
+    if (top < pad) top = pad;
+
+    box.style.left = left + 'px';
+    box.style.top  = top + 'px';
+  }
+
+  function hideActive(){
+    if (activeBox){
+      activeBox.style.display = 'none';
+      activeBox = null;
+    }
+  }
+
+  cites.forEach(cite => {
+    const targetId = cite.getAttribute('href')?.replace('#','');
+    if (!targetId) return;
+    const box = document.getElementById(targetId);
+    if (!box) return;
+
+    // Show on hover
+    cite.addEventListener('mouseenter', (e) => {
+      hideActive();
+      activeBox = box;
+      showBox(box, e.clientX, e.clientY);
+    });
+
+    cite.addEventListener('mousemove', (e) => {
+      if (activeBox === box) showBox(box, e.clientX, e.clientY);
+    });
+
+    cite.addEventListener('mouseleave', () => {
+      // small delay so user can move into the box if they want
+      setTimeout(() => {
+        if (activeBox === box) hideActive();
+      }, 120);
+    });
+
+    // Also show on click (mobile friendly)
+    cite.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (activeBox === box){
+        hideActive();
+      } else {
+        hideActive();
+        activeBox = box;
+        const rect = cite.getBoundingClientRect();
+        showBox(box, rect.right, rect.bottom);
+      }
+    });
+  });
+
+  // Hide if you click elsewhere or scroll
+  document.addEventListener('click', (e) => {
+    const isCite = e.target.closest && e.target.closest('a.dt-cite');
+    const isBox  = e.target.closest && e.target.closest('.dt-hover-box');
+    if (!isCite && !isBox) hideActive();
+  });
+
+  window.addEventListener('scroll', hideActive, {passive:true});
+  window.addEventListener('resize', hideActive, {passive:true});
+})();
+</script>
+
+<footer class="site-footer" id="copyright">
+  <div class="footer-inner">
+    <div class="footer-line">
+      <span>© <span id="year">2026</span> Xinyue Wang</span>
+    </div>
+    <div class="footer-line">
+      <span>Stanford University School of Medicine</span>
+      <span class="sep">•</span>
+      <a href="mailto:wxinyue@ohs.stanford.edu">Contact</a>
+      <span class="sep">•</span>
+      <span>Last updated: <time datetime="2026-01-30">Jan 30, 2026</time></span>
+      <span class="sep">•</span>
+      <span>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // optional: auto-set the year if you don’t want to hardcode it
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+
+</body>
+</html>

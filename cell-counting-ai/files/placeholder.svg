@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop stop-color="#7a1f2b" offset="0" />
+      <stop stop-color="#2e3a5c" offset="1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="36" y="36" width="1128" height="603" rx="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.28)" stroke-width="4"/>
+  <text x="50%" y="48%" fill="#ffffff" font-family="'Space Grotesk', 'Inter', system-ui, sans-serif" font-size="44" font-weight="600" text-anchor="middle">Figure Placeholder</text>
+  <text x="50%" y="56%" fill="#e6e6e6" font-family="'Space Grotesk', 'Inter', system-ui, sans-serif" font-size="24" font-weight="400" text-anchor="middle">Drop your workflow graphic here</text>
+</svg>
